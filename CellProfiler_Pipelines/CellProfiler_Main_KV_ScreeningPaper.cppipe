@@ -1,0 +1,1040 @@
+CellProfiler Pipeline: http://www.cellprofiler.org
+Version:5
+DateRevision:407
+GitHash:
+ModuleCount:39
+HasImagePlaneDetails:False
+
+Images:[module_num:1|svn_version:'Unknown'|variable_revision_number:2|show_window:False|notes:['To begin creating your project, use the Images module to compile a list of files and/or folders that you want to analyze. You can also specify a set of rules to include only the desired files in your selected folders.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    :
+    Filter images?:Images only
+    Select the rule criteria:and (extension does isimage) (directory doesnot containregexp "[\\\\/]\\.")
+
+Metadata:[module_num:2|svn_version:'Unknown'|variable_revision_number:6|show_window:False|notes:['The Metadata module optionally allows you to extract information describing your images (i.e, metadata) which will be stored along with your measurements. This information can be contained in the file name and/or location, or in an external file.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Extract metadata?:Yes
+    Metadata data type:Text
+    Metadata types:{}
+    Extraction method count:1
+    Metadata extraction method:Extract from file/folder names
+    Metadata source:File name
+    Regular expression to extract from file name:^(?P<Plate>.*)_(?P<Well>[A-P][0-9]{2})_s(?P<Site>[0-9])_w(?P<Wavelength>[0-9])
+    Regular expression to extract from folder name:(?P<Date>[0-9]{4}_[0-9]{2}_[0-9]{2})$
+    Extract metadata from:All images
+    Select the filtering criteria:and (file does contain "")
+    Metadata file location:Default Input Folder sub-folder|Downloads
+    Match file and image metadata:[]
+    Use case insensitive matching?:No
+    Metadata file name:
+    Does cached metadata exist?:No
+
+NamesAndTypes:[module_num:3|svn_version:'Unknown'|variable_revision_number:8|show_window:False|notes:['The NamesAndTypes module allows you to assign a meaningful name to each image by which other modules will refer to it.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Assign a name to:Images matching rules
+    Select the image type:Grayscale image
+    Name to assign these images:DNA
+    Match metadata:[]
+    Image set matching method:Order
+    Set intensity range from:Image metadata
+    Assignments count:2
+    Single images count:0
+    Maximum intensity:255.0
+    Process as 3D?:No
+    Relative pixel spacing in X:1.0
+    Relative pixel spacing in Y:1.0
+    Relative pixel spacing in Z:1.0
+    Select the rule criteria:and (file does contain "_w2")
+    Name to assign these images:BacteriaImage
+    Name to assign these objects:Cell
+    Select the image type:Grayscale image
+    Set intensity range from:Image metadata
+    Maximum intensity:255.0
+    Select the rule criteria:and (file does contain "_w1")
+    Name to assign these images:DNAImage
+    Name to assign these objects:Nucleus
+    Select the image type:Grayscale image
+    Set intensity range from:Image metadata
+    Maximum intensity:255.0
+
+Groups:[module_num:4|svn_version:'Unknown'|variable_revision_number:2|show_window:False|notes:['The Groups module optionally allows you to split your list of images into image subsets (groups) which will be processed independently of each other. Examples of groupings include screening batches, microtiter plates, time-lapse movies, etc.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Do you want to group your images?:Yes
+    grouping metadata count:2
+    Metadata category:Plate
+    Metadata category:Well
+
+EnhanceOrSuppressFeatures:[module_num:5|svn_version:'Unknown'|variable_revision_number:7|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input image:BacteriaImage
+    Name the output image:EnhancedBacteriaimage
+    Select the operation:Enhance
+    Feature size:20
+    Feature type:Dark holes
+    Range of hole sizes:7,35
+    Smoothing scale:2.0
+    Shear angle:0.0
+    Decay:0.95
+    Enhancement method:Tubeness
+    Speed and accuracy:Fast
+    Rescale result image:Yes
+
+EnhanceOrSuppressFeatures:[module_num:6|svn_version:'Unknown'|variable_revision_number:7|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input image:EnhancedBacteriaimage
+    Name the output image:SuppressedBacteriaimage
+    Select the operation:Suppress
+    Feature size:6
+    Feature type:Speckles
+    Range of hole sizes:1,10
+    Smoothing scale:2.0
+    Shear angle:0.0
+    Decay:0.95
+    Enhancement method:Tubeness
+    Speed and accuracy:Fast
+    Rescale result image:Yes
+
+IdentifyPrimaryObjects:[module_num:7|svn_version:'Unknown'|variable_revision_number:14|show_window:False|notes:['Identify the nuclei from the nuclear stain image. ']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input image:SuppressedBacteriaimage
+    Name the primary objects to be identified:BacteriaObjects
+    Typical diameter of objects, in pixel units (Min,Max):8,35
+    Discard objects outside the diameter range?:Yes
+    Discard objects touching the border of the image?:Yes
+    Method to distinguish clumped objects:None
+    Method to draw dividing lines between clumped objects:Shape
+    Size of smoothing filter:10
+    Suppress local maxima that are closer than this minimum allowed distance:7.0
+    Speed up by using lower-resolution image to find local maxima?:No
+    Fill holes in identified objects?:After both thresholding and declumping
+    Automatically calculate size of smoothing filter for declumping?:Yes
+    Automatically calculate minimum allowed distance between local maxima?:Yes
+    Handling of objects if excessive number of objects identified:Continue
+    Maximum number of objects:500
+    Display accepted local maxima?:No
+    Select maxima color:Blue
+    Use advanced settings?:Yes
+    Threshold setting version:12
+    Threshold strategy:Global
+    Thresholding method:Robust Background
+    Threshold smoothing scale:0.0
+    Threshold correction factor:1.0
+    Lower and upper bounds on threshold:0.0,1.0
+    Manual threshold:0.0
+    Select the measurement to threshold with:None
+    Two-class or three-class thresholding?:Two classes
+    Log transform before thresholding?:No
+    Assign pixels in the middle intensity class to the foreground or the background?:Foreground
+    Size of adaptive window:50
+    Lower outlier fraction:0.0
+    Upper outlier fraction:0.0
+    Averaging method:Mode
+    Variance method:Standard deviation
+    # of deviations:1.0
+    Thresholding method:Otsu
+
+EnhanceOrSuppressFeatures:[module_num:8|svn_version:'Unknown'|variable_revision_number:7|show_window:False|notes:['Use filtering to enhance the foci speckles in the image. The feature size setting should be specified to be at least as large as the largest feature to be enhanced.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:True]
+    Select the input image:DNAImage
+    Name the output image:EnhancedDNAImage
+    Select the operation:Enhance
+    Feature size:18
+    Feature type:Speckles
+    Range of hole sizes:1,10
+    Smoothing scale:2.0
+    Shear angle:0.0
+    Decay:0.95
+    Enhancement method:Tubeness
+    Speed and accuracy:Slow
+    Rescale result image:Yes
+
+IdentifyPrimaryObjects:[module_num:9|svn_version:'Unknown'|variable_revision_number:14|show_window:False|notes:['Identify the foci using per-object thresholding to compute a threshold for each individual nuclei object. Some manual adjustment of the smoothing filter size and maxima supression distance is required to optimize segmentation.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input image:EnhancedDNAImage
+    Name the primary objects to be identified:DNAObjects
+    Typical diameter of objects, in pixel units (Min,Max):1,35
+    Discard objects outside the diameter range?:Yes
+    Discard objects touching the border of the image?:Yes
+    Method to distinguish clumped objects:Intensity
+    Method to draw dividing lines between clumped objects:Intensity
+    Size of smoothing filter:4
+    Suppress local maxima that are closer than this minimum allowed distance:4
+    Speed up by using lower-resolution image to find local maxima?:Yes
+    Fill holes in identified objects?:After both thresholding and declumping
+    Automatically calculate size of smoothing filter for declumping?:No
+    Automatically calculate minimum allowed distance between local maxima?:No
+    Handling of objects if excessive number of objects identified:Continue
+    Maximum number of objects:500
+    Display accepted local maxima?:No
+    Select maxima color:Blue
+    Use advanced settings?:Yes
+    Threshold setting version:12
+    Threshold strategy:Global
+    Thresholding method:Robust Background
+    Threshold smoothing scale:0
+    Threshold correction factor:1.0
+    Lower and upper bounds on threshold:0.0,1.0
+    Manual threshold:0.0
+    Select the measurement to threshold with:None
+    Two-class or three-class thresholding?:Three classes
+    Log transform before thresholding?:No
+    Assign pixels in the middle intensity class to the foreground or the background?:Foreground
+    Size of adaptive window:50
+    Lower outlier fraction:0
+    Upper outlier fraction:0.00
+    Averaging method:Median
+    Variance method:Standard deviation
+    # of deviations:1.0
+    Thresholding method:Otsu
+
+MaskObjects:[module_num:10|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select objects to be masked:BacteriaObjects
+    Name the masked objects:MaskedBacteriaObjects
+    Mask using a region defined by other objects or by binary image?:Objects
+    Select the masking object:DNAObjects
+    Select the masking image:None
+    Handling of objects that are partially masked:Keep
+    Fraction of object that must overlap:0.5
+    Numbering of resulting objects:Renumber
+    Invert the mask?:No
+
+MaskObjects:[module_num:11|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select objects to be masked:DNAObjects
+    Name the masked objects:MaskedDNAObjects
+    Mask using a region defined by other objects or by binary image?:Objects
+    Select the masking object:MaskedBacteriaObjects
+    Select the masking image:None
+    Handling of objects that are partially masked:Keep overlapping region
+    Fraction of object that must overlap:0.5
+    Numbering of resulting objects:Renumber
+    Invert the mask?:No
+
+MaskImage:[module_num:12|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input image:EnhancedDNAImage
+    Name the output image:MaskedDNAImage
+    Use objects or an image as a mask?:Objects
+    Select object for mask:MaskedDNAObjects
+    Select image for mask:None
+    Invert the mask?:No
+
+MeasureObjectSizeShape:[module_num:13|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select object sets to measure:MaskedBacteriaObjects, MaskedDNAObjects
+    Calculate the Zernike features?:Yes
+    Calculate the advanced features?:No
+
+RelateObjects:[module_num:14|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:True]
+    Parent objects:MaskedBacteriaObjects
+    Child objects:MaskedDNAObjects
+    Calculate child-parent distances?:None
+    Calculate per-parent means for all child measurements?:Yes
+    Calculate distances to other parents?:No
+    Do you want to save the children with parents as a new object set?:No
+    Name the output object:DNAinCells_objects
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+
+MeasureObjectIntensity:[module_num:15|svn_version:'Unknown'|variable_revision_number:4|show_window:False|notes:['Measure the intensity of the foci against the h2ax image.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select images to measure:BacteriaImage, DNAImage, EnhancedBacteriaimage, MaskedDNAImage
+    Select objects to measure:MaskedBacteriaObjects
+
+MeasureObjectIntensityDistribution:[module_num:16|svn_version:'Unknown'|variable_revision_number:6|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select images to measure:EnhancedDNAImage
+    Hidden:1
+    Hidden:1
+    Hidden:0
+    Calculate intensity Zernikes?:Magnitudes only
+    Maximum zernike moment:9
+    Select objects to measure:MaskedBacteriaObjects
+    Object to use as center?:Centers of other objects
+    Select objects to use as centers:MaskedDNAObjects
+    Scale the bins?:No
+    Number of bins:6
+    Maximum radius:12
+
+FilterObjects:[module_num:17|svn_version:'Unknown'|variable_revision_number:8|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the objects to filter:MaskedBacteriaObjects
+    Name the output objects:InterestingBacteriaObjects
+    Select the filtering mode:Rules
+    Select the filtering method:Limits
+    Select the objects that contain the filtered objects:None
+    Select the location of the rules or classifier file:Default Input Folder sub-folder|sorting-rules
+    Rules or classifier file name:InterestingCellFilter_MainAnalysis.txt
+    Class number:1
+    Measurement count:1
+    Additional object count:0
+    Assign overlapping child to:Both parents
+    Select the measurement to filter by:AreaShape_Area
+    Filter using a minimum measurement value?:Yes
+    Minimum value:0.0
+    Filter using a maximum measurement value?:Yes
+    Maximum value:1.0
+
+MaskObjects:[module_num:18|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select objects to be masked:MaskedDNAObjects
+    Name the masked objects:InterestingDNAObjects
+    Mask using a region defined by other objects or by binary image?:Objects
+    Select the masking object:InterestingBacteriaObjects
+    Select the masking image:None
+    Handling of objects that are partially masked:Keep overlapping region
+    Fraction of object that must overlap:0.5
+    Numbering of resulting objects:Renumber
+    Invert the mask?:No
+
+ConvertObjectsToImage:[module_num:19|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:True]
+    Select the input objects:InterestingBacteriaObjects
+    Name the output image:InterestingBacteriaObjectsImage
+    Select the color format:Binary (black & white)
+    Select the colormap:Default
+
+MaskImage:[module_num:20|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:['Mask the foci image using the nuclei objects.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input image:EnhancedDNAImage
+    Name the output image:InterestingDNAImage
+    Use objects or an image as a mask?:Objects
+    Select object for mask:InterestingDNAObjects
+    Select image for mask:None
+    Invert the mask?:No
+
+MeasureObjectSizeShape:[module_num:21|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select object sets to measure:InterestingDNAObjects
+    Calculate the Zernike features?:Yes
+    Calculate the advanced features?:No
+
+RelateObjects:[module_num:22|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Parent objects:InterestingBacteriaObjects
+    Child objects:InterestingDNAObjects
+    Calculate child-parent distances?:None
+    Calculate per-parent means for all child measurements?:Yes
+    Calculate distances to other parents?:No
+    Do you want to save the children with parents as a new object set?:No
+    Name the output object:DNAinCells_objects
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+
+MeasureObjectIntensityDistribution:[module_num:23|svn_version:'Unknown'|variable_revision_number:6|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select images to measure:DNAImage, EnhancedDNAImage, InterestingDNAImage
+    Hidden:1
+    Hidden:1
+    Hidden:0
+    Calculate intensity Zernikes?:Magnitudes only
+    Maximum zernike moment:9
+    Select objects to measure:InterestingBacteriaObjects
+    Object to use as center?:Centers of other objects
+    Select objects to use as centers:InterestingDNAObjects
+    Scale the bins?:No
+    Number of bins:6
+    Maximum radius:12
+
+MeasureObjectIntensity:[module_num:24|svn_version:'Unknown'|variable_revision_number:4|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select images to measure:EnhancedDNAImage, InterestingDNAImage
+    Select objects to measure:InterestingBacteriaObjects
+
+FilterObjects:[module_num:25|svn_version:'Unknown'|variable_revision_number:8|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the objects to filter:InterestingBacteriaObjects
+    Name the output objects:PositiveTreatedBacteria
+    Select the filtering mode:Rules
+    Select the filtering method:Limits
+    Select the objects that contain the filtered objects:None
+    Select the location of the rules or classifier file:Default Input Folder sub-folder|sorting-rules
+    Rules or classifier file name:CompactionCategoryFilter_MainAnalysis.txt
+    Class number:1
+    Measurement count:1
+    Additional object count:0
+    Assign overlapping child to:Both parents
+    Select the measurement to filter by:AreaShape_Area
+    Filter using a minimum measurement value?:Yes
+    Minimum value:0.0
+    Filter using a maximum measurement value?:Yes
+    Maximum value:1.0
+
+MaskObjects:[module_num:26|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select objects to be masked:InterestingDNAObjects
+    Name the masked objects:PositiveTreatedDNA
+    Mask using a region defined by other objects or by binary image?:Objects
+    Select the masking object:PositiveTreatedBacteria
+    Select the masking image:None
+    Handling of objects that are partially masked:Keep overlapping region
+    Fraction of object that must overlap:0.5
+    Numbering of resulting objects:Renumber
+    Invert the mask?:No
+
+FilterObjects:[module_num:27|svn_version:'Unknown'|variable_revision_number:8|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the objects to filter:InterestingBacteriaObjects
+    Name the output objects:NontreatedBacteria
+    Select the filtering mode:Rules
+    Select the filtering method:Limits
+    Select the objects that contain the filtered objects:None
+    Select the location of the rules or classifier file:Default Input Folder sub-folder|sorting-rules
+    Rules or classifier file name:CompactionCategoryFilter_MainAnalysis.txt
+    Class number:2
+    Measurement count:1
+    Additional object count:0
+    Assign overlapping child to:Both parents
+    Select the measurement to filter by:AreaShape_Area
+    Filter using a minimum measurement value?:Yes
+    Minimum value:0.0
+    Filter using a maximum measurement value?:Yes
+    Maximum value:1.0
+
+MaskObjects:[module_num:28|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select objects to be masked:InterestingDNAObjects
+    Name the masked objects:NontreatedDNA
+    Mask using a region defined by other objects or by binary image?:Objects
+    Select the masking object:NontreatedBacteria
+    Select the masking image:None
+    Handling of objects that are partially masked:Keep overlapping region
+    Fraction of object that must overlap:0.5
+    Numbering of resulting objects:Renumber
+    Invert the mask?:No
+
+FilterObjects:[module_num:29|svn_version:'Unknown'|variable_revision_number:8|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the objects to filter:InterestingBacteriaObjects
+    Name the output objects:NegativeTreatedBacteria
+    Select the filtering mode:Rules
+    Select the filtering method:Limits
+    Select the objects that contain the filtered objects:None
+    Select the location of the rules or classifier file:Default Input Folder sub-folder|sorting-rules
+    Rules or classifier file name:CompactionCategoryFilter_MainAnalysis.txt
+    Class number:3
+    Measurement count:1
+    Additional object count:0
+    Assign overlapping child to:Both parents
+    Select the measurement to filter by:AreaShape_Area
+    Filter using a minimum measurement value?:Yes
+    Minimum value:0.0
+    Filter using a maximum measurement value?:Yes
+    Maximum value:1.0
+
+MaskObjects:[module_num:30|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select objects to be masked:InterestingDNAObjects
+    Name the masked objects:NegativeTreatedDNA
+    Mask using a region defined by other objects or by binary image?:Objects
+    Select the masking object:NegativeTreatedBacteria
+    Select the masking image:None
+    Handling of objects that are partially masked:Keep overlapping region
+    Fraction of object that must overlap:0.5
+    Numbering of resulting objects:Renumber
+    Invert the mask?:No
+
+MeasureObjectSizeShape:[module_num:31|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select object sets to measure:NegativeTreatedBacteria, NegativeTreatedDNA, NontreatedBacteria, NontreatedDNA, PositiveTreatedBacteria, PositiveTreatedDNA
+    Calculate the Zernike features?:Yes
+    Calculate the advanced features?:No
+
+MeasureObjectIntensity:[module_num:32|svn_version:'Unknown'|variable_revision_number:4|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select images to measure:EnhancedDNAImage, InterestingDNAImage
+    Select objects to measure:NegativeTreatedBacteria, NegativeTreatedDNA, NontreatedBacteria, NontreatedDNA, PositiveTreatedBacteria, PositiveTreatedDNA
+
+MeasureObjectIntensityDistribution:[module_num:33|svn_version:'Unknown'|variable_revision_number:6|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select images to measure:DNAImage, EnhancedDNAImage, InterestingDNAImage
+    Hidden:3
+    Hidden:1
+    Hidden:0
+    Calculate intensity Zernikes?:Magnitudes and phase
+    Maximum zernike moment:9
+    Select objects to measure:PositiveTreatedBacteria
+    Object to use as center?:Centers of other objects
+    Select objects to use as centers:PositiveTreatedDNA
+    Select objects to measure:NontreatedBacteria
+    Object to use as center?:Centers of other objects
+    Select objects to use as centers:NontreatedDNA
+    Select objects to measure:NegativeTreatedBacteria
+    Object to use as center?:Centers of other objects
+    Select objects to use as centers:NegativeTreatedDNA
+    Scale the bins?:No
+    Number of bins:6
+    Maximum radius:12
+
+RelateObjects:[module_num:34|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Parent objects:PositiveTreatedBacteria
+    Child objects:PositiveTreatedDNA
+    Calculate child-parent distances?:None
+    Calculate per-parent means for all child measurements?:Yes
+    Calculate distances to other parents?:No
+    Do you want to save the children with parents as a new object set?:No
+    Name the output object:DNAinCells_objects
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+
+RelateObjects:[module_num:35|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Parent objects:NontreatedBacteria
+    Child objects:NontreatedDNA
+    Calculate child-parent distances?:None
+    Calculate per-parent means for all child measurements?:Yes
+    Calculate distances to other parents?:No
+    Do you want to save the children with parents as a new object set?:No
+    Name the output object:DNAinCells_objects
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+
+RelateObjects:[module_num:36|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Parent objects:NegativeTreatedBacteria
+    Child objects:NegativeTreatedDNA
+    Calculate child-parent distances?:None
+    Calculate per-parent means for all child measurements?:Yes
+    Calculate distances to other parents?:No
+    Do you want to save the children with parents as a new object set?:No
+    Name the output object:DNAinCells_objects
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+    Parent name:None
+
+ExportToDatabase:[module_num:37|svn_version:'Unknown'|variable_revision_number:28|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:False|wants_pause:False]
+    Database type:SQLite
+    Database name:DefaultDB
+    Add a prefix to table names?:No
+    Table prefix:TrainingTestControlsPlate13_
+    Output file location:Default Output Folder|E:\\1 PhD project\\CellProfiler Large test run of potential hits
+    Create a CellProfiler Analyst properties file?:Yes
+    Database host:
+    Username:
+    Password:
+    Name the SQLite database file:HPCTestRun1.db
+    Calculate the per-image mean values of object measurements?:No
+    Calculate the per-image median values of object measurements?:No
+    Calculate the per-image standard deviation values of object measurements?:No
+    Calculate the per-well mean values of object measurements?:No
+    Calculate the per-well median values of object measurements?:No
+    Calculate the per-well standard deviation values of object measurements?:No
+    Export measurements for all objects to the database?:Select...
+    Select the objects:InterestingBacteriaObjects,InterestingDNAObjects,NegativeTreatedBacteria,NontreatedBacteria,PositiveTreatedBacteria
+    Maximum # of characters in a column name:64
+    Create one table per object, a single object table or a single object view?:One table per object type
+    Enter an image url prepend if you plan to access your files via http:
+    Write image thumbnails directly to the database?:Yes
+    Select the images for which you want to save thumbnails:BacteriaImage,DNAImage
+    Auto-scale thumbnail pixel intensities?:Yes
+    Select the plate type:384
+    Select the plate metadata:Plate
+    Select the well metadata:Well
+    Include information for all images, using default values?:Yes
+    Properties image group count:1
+    Properties group field count:1
+    Properties filter field count:0
+    Workspace measurement count:1
+    Experiment name:HPCTestRun1
+    Which objects should be used for locations?:MaskedBacteria_objects
+    Enter a phenotype class table name if using the Classifier tool in CellProfiler Analyst:
+    Export object relationships?:Yes
+    Overwrite without warning?:Never
+    Access CellProfiler Analyst images via URL?:Yes
+    Select the classification type:Object
+    Select an image to include:None
+    Use the image name for the display?:Yes
+    Image name:Channel1
+    Channel color:red
+    Do you want to add group fields?:Yes
+    Enter the name of the group:Well_group
+    Enter the per-image columns which define the group, separated by commas:ImageNumber, Image_Metadata_Plate, Image_Metadata_Well
+    Do you want to add filter fields?:No
+    Automatically create a filter for each plate?:No
+    Create a CellProfiler Analyst workspace file?:No
+    Select the measurement display tool:PlateViewer
+    Type of measurement to plot on the X-axis:Object
+    Enter the object name:MaskedBacteria_objects
+    Select the X-axis measurement:Children_MaskedDNA_objects_Count
+    Select the X-axis index:ImageNumber
+    Type of measurement to plot on the Y-axis:Image
+    Enter the object name:None
+    Select the Y-axis measurement:None
+    Select the Y-axis index:ImageNumber
+
+ExportToSpreadsheet:[module_num:38|svn_version:'Unknown'|variable_revision_number:13|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the column delimiter:Comma (",")
+    Add image metadata columns to your object data file?:No
+    Add image file and folder names to your object data file?:No
+    Select the measurements to export:Yes
+    Calculate the per-image mean values for object measurements?:No
+    Calculate the per-image median values for object measurements?:No
+    Calculate the per-image standard deviation values for object measurements?:No
+    Output file location:Default Output Folder|E:\\1 PhD project\\CellProfiler Large test run of potential hits
+    Create a GenePattern GCT file?:No
+    Select source of sample row name:Metadata
+    Select the image to use as the identifier:None
+    Select the metadata to use as the identifier:None
+    Export all measurement types?:No
+    Press button to select measurements:NegativeTreatedDNA|Intensity_MADIntensity_EnhancedDNAImage,NegativeTreatedDNA|Intensity_MADIntensity_InterestingDNAImage,NegativeTreatedDNA|Intensity_StdIntensityEdge_EnhancedDNAImage,NegativeTreatedDNA|Intensity_StdIntensityEdge_InterestingDNAImage,NegativeTreatedDNA|Intensity_MeanIntensity_EnhancedDNAImage,NegativeTreatedDNA|Intensity_MeanIntensity_InterestingDNAImage,NegativeTreatedDNA|Intensity_IntegratedIntensityEdge_EnhancedDNAImage,NegativeTreatedDNA|Intensity_IntegratedIntensityEdge_InterestingDNAImage,NegativeTreatedDNA|Intensity_MaxIntensityEdge_InterestingDNAImage,NegativeTreatedDNA|Intensity_MaxIntensityEdge_EnhancedDNAImage,NegativeTreatedDNA|Intensity_MinIntensityEdge_EnhancedDNAImage,NegativeTreatedDNA|Intensity_MinIntensityEdge_InterestingDNAImage,NegativeTreatedDNA|Intensity_MinIntensity_InterestingDNAImage,NegativeTreatedDNA|Intensity_MinIntensity_EnhancedDNAImage,NegativeTreatedDNA|Intensity_StdIntensity_EnhancedDNAImage,NegativeTreatedDNA|Intensity_StdIntensity_InterestingDNAImage,NegativeTreatedDNA|Intensity_UpperQuartileIntensity_EnhancedDNAImage,NegativeTreatedDNA|Intensity_UpperQuartileIntensity_InterestingDNAImage,NegativeTreatedDNA|Intensity_MassDisplacement_InterestingDNAImage,NegativeTreatedDNA|Intensity_MassDisplacement_EnhancedDNAImage,NegativeTreatedDNA|Intensity_MeanIntensityEdge_EnhancedDNAImage,NegativeTreatedDNA|Intensity_MeanIntensityEdge_InterestingDNAImage,NegativeTreatedDNA|Intensity_MaxIntensity_InterestingDNAImage,NegativeTreatedDNA|Intensity_MaxIntensity_EnhancedDNAImage,NegativeTreatedDNA|Intensity_LowerQuartileIntensity_EnhancedDNAImage,NegativeTreatedDNA|Intensity_LowerQuartileIntensity_InterestingDNAImage,NegativeTreatedDNA|Intensity_IntegratedIntensity_InterestingDNAImage,NegativeTreatedDNA|Intensity_IntegratedIntensity_EnhancedDNAImage,NegativeTreatedDNA|Intensity_MedianIntensity_EnhancedDNAImage,NegativeTreatedDNA|Intensity_MedianIntensity_InterestingDNAImage,NegativeTreatedDNA|AreaShape_Zernike_5_5,NegativeTreatedDNA|AreaShape_Zernike_5_3,NegativeTreatedDNA|AreaShape_Zernike_5_1,NegativeTreatedDNA|AreaShape_Zernike_8_6,NegativeTreatedDNA|AreaShape_Zernike_8_8,NegativeTreatedDNA|AreaShape_Zernike_8_2,NegativeTreatedDNA|AreaShape_Zernike_8_4,NegativeTreatedDNA|AreaShape_Zernike_8_0,NegativeTreatedDNA|AreaShape_Zernike_4_0,NegativeTreatedDNA|AreaShape_Zernike_4_4,NegativeTreatedDNA|AreaShape_Zernike_4_2,NegativeTreatedDNA|AreaShape_Zernike_6_6,NegativeTreatedDNA|AreaShape_Zernike_6_4,NegativeTreatedDNA|AreaShape_Zernike_6_2,NegativeTreatedDNA|AreaShape_Zernike_6_0,NegativeTreatedDNA|AreaShape_Zernike_7_1,NegativeTreatedDNA|AreaShape_Zernike_7_3,NegativeTreatedDNA|AreaShape_Zernike_7_7,NegativeTreatedDNA|AreaShape_Zernike_7_5,NegativeTreatedDNA|AreaShape_Zernike_3_1,NegativeTreatedDNA|AreaShape_Zernike_3_3,NegativeTreatedDNA|AreaShape_Zernike_9_7,NegativeTreatedDNA|AreaShape_Zernike_9_5,NegativeTreatedDNA|AreaShape_Zernike_9_3,NegativeTreatedDNA|AreaShape_Zernike_9_9,NegativeTreatedDNA|AreaShape_Zernike_9_1,NegativeTreatedDNA|AreaShape_Zernike_2_2,NegativeTreatedDNA|AreaShape_Zernike_2_0,NegativeTreatedDNA|AreaShape_Zernike_0_0,NegativeTreatedDNA|AreaShape_Zernike_1_1,NegativeTreatedDNA|AreaShape_Extent,NegativeTreatedDNA|AreaShape_BoundingBoxArea,NegativeTreatedDNA|AreaShape_Center_X,NegativeTreatedDNA|AreaShape_Center_Y,NegativeTreatedDNA|AreaShape_EquivalentDiameter,NegativeTreatedDNA|AreaShape_BoundingBoxMinimum_Y,NegativeTreatedDNA|AreaShape_BoundingBoxMinimum_X,NegativeTreatedDNA|AreaShape_MeanRadius,NegativeTreatedDNA|AreaShape_Compactness,NegativeTreatedDNA|AreaShape_Orientation,NegativeTreatedDNA|AreaShape_MajorAxisLength,NegativeTreatedDNA|AreaShape_MedianRadius,NegativeTreatedDNA|AreaShape_MinorAxisLength,NegativeTreatedDNA|AreaShape_FormFactor,NegativeTreatedDNA|AreaShape_MinFeretDiameter,NegativeTreatedDNA|AreaShape_MaximumRadius,NegativeTreatedDNA|AreaShape_EulerNumber,NegativeTreatedDNA|AreaShape_Eccentricity,NegativeTreatedDNA|AreaShape_BoundingBoxMaximum_Y,NegativeTreatedDNA|AreaShape_BoundingBoxMaximum_X,NegativeTreatedDNA|AreaShape_Perimeter,NegativeTreatedDNA|AreaShape_Solidity,NegativeTreatedDNA|AreaShape_Area,NegativeTreatedDNA|AreaShape_MaxFeretDiameter,NegativeTreatedDNA|Location_CenterMassIntensity_Z_InterestingDNAImage,NegativeTreatedDNA|Location_CenterMassIntensity_Z_EnhancedDNAImage,NegativeTreatedDNA|Location_CenterMassIntensity_Y_InterestingDNAImage,NegativeTreatedDNA|Location_CenterMassIntensity_Y_EnhancedDNAImage,NegativeTreatedDNA|Location_CenterMassIntensity_X_EnhancedDNAImage,NegativeTreatedDNA|Location_CenterMassIntensity_X_InterestingDNAImage,NegativeTreatedDNA|Location_MaxIntensity_X_EnhancedDNAImage,NegativeTreatedDNA|Location_MaxIntensity_X_InterestingDNAImage,NegativeTreatedDNA|Location_MaxIntensity_Z_InterestingDNAImage,NegativeTreatedDNA|Location_MaxIntensity_Z_EnhancedDNAImage,NegativeTreatedDNA|Location_MaxIntensity_Y_InterestingDNAImage,NegativeTreatedDNA|Location_MaxIntensity_Y_EnhancedDNAImage,NegativeTreatedDNA|Location_Center_X,NegativeTreatedDNA|Location_Center_Y,NegativeTreatedDNA|Number_Object_Number,NegativeTreatedDNA|Parent_InterestingDNAObjects,NegativeTreatedDNA|Parent_NegativeTreatedBacteria,Image|ExecutionTime_28MaskObjects,Image|ExecutionTime_24MeasureObjectIntensity,Image|ExecutionTime_16MeasureObjectIntensityDistribution,Image|ExecutionTime_23MeasureObjectIntensityDistribution,Image|ExecutionTime_34RelateObjects,Image|ExecutionTime_27FilterObjects,Image|ExecutionTime_13MeasureObjectSizeShape,Image|ExecutionTime_07IdentifyPrimaryObjects,Image|ExecutionTime_22RelateObjects,Image|ExecutionTime_14RelateObjects,Image|ExecutionTime_10MaskObjects,Image|ExecutionTime_20MaskImage,Image|ExecutionTime_29FilterObjects,Image|ExecutionTime_17FilterObjects,Image|ExecutionTime_30MaskObjects,Image|ExecutionTime_01Images,Image|ExecutionTime_05EnhanceOrSuppressFeatures,Image|ExecutionTime_19ConvertObjectsToImage,Image|ExecutionTime_12MaskImage,Image|ExecutionTime_35RelateObjects,Image|ExecutionTime_31MeasureObjectSizeShape,Image|ExecutionTime_32MeasureObjectIntensity,Image|ExecutionTime_08EnhanceOrSuppressFeatures,Image|ExecutionTime_09IdentifyPrimaryObjects,Image|ExecutionTime_11MaskObjects,Image|ExecutionTime_04Groups,Image|ExecutionTime_06EnhanceOrSuppressFeatures,Image|ExecutionTime_02Metadata,Image|ExecutionTime_25FilterObjects,Image|ExecutionTime_18MaskObjects,Image|ExecutionTime_21MeasureObjectSizeShape,Image|ExecutionTime_15MeasureObjectIntensity,Image|ExecutionTime_36RelateObjects,Image|ExecutionTime_03NamesAndTypes,Image|ExecutionTime_33MeasureObjectIntensityDistribution,Image|ExecutionTime_26MaskObjects,Image|ModuleError_32MeasureObjectIntensity,Image|ModuleError_11MaskObjects,Image|ModuleError_26MaskObjects,Image|ModuleError_20MaskImage,Image|ModuleError_31MeasureObjectSizeShape,Image|ModuleError_34RelateObjects,Image|ModuleError_16MeasureObjectIntensityDistribution,Image|ModuleError_08EnhanceOrSuppressFeatures,Image|ModuleError_07IdentifyPrimaryObjects,Image|ModuleError_23MeasureObjectIntensityDistribution,Image|ModuleError_35RelateObjects,Image|ModuleError_36RelateObjects,Image|ModuleError_01Images,Image|ModuleError_02Metadata,Image|ModuleError_19ConvertObjectsToImage,Image|ModuleError_14RelateObjects,Image|ModuleError_15MeasureObjectIntensity,Image|ModuleError_29FilterObjects,Image|ModuleError_22RelateObjects,Image|ModuleError_28MaskObjects,Image|ModuleError_12MaskImage,Image|ModuleError_25FilterObjects,Image|ModuleError_21MeasureObjectSizeShape,Image|ModuleError_24MeasureObjectIntensity,Image|ModuleError_06EnhanceOrSuppressFeatures,Image|ModuleError_03NamesAndTypes,Image|ModuleError_13MeasureObjectSizeShape,Image|ModuleError_04Groups,Image|ModuleError_30MaskObjects,Image|ModuleError_27FilterObjects,Image|ModuleError_10MaskObjects,Image|ModuleError_33MeasureObjectIntensityDistribution,Image|ModuleError_18MaskObjects,Image|ModuleError_09IdentifyPrimaryObjects,Image|ModuleError_05EnhanceOrSuppressFeatures,Image|ModuleError_17FilterObjects,Image|MD5Digest_BacteriaImage,Image|MD5Digest_DNAImage,Image|Count_MaskedDNAObjects,Image|Count_InterestingDNAObjects,Image|Count_BacteriaObjects,Image|Count_NegativeTreatedBacteria,Image|Count_PositiveTreatedBacteria,Image|Count_NontreatedBacteria,Image|Count_MaskedBacteriaObjects,Image|Count_DNAObjects,Image|Count_NontreatedDNA,Image|Count_InterestingBacteriaObjects,Image|Count_NegativeTreatedDNA,Image|Count_PositiveTreatedDNA,Image|FileName_BacteriaImage,Image|FileName_DNAImage,Image|Height_DNAImage,Image|Height_BacteriaImage,Image|Metadata_Frame,Image|Metadata_Well,Image|Metadata_Wavelength,Image|Metadata_FileLocation,Image|Metadata_Plate,Image|Metadata_Site,Image|Metadata_Series,Image|Threshold_OrigThreshold_BacteriaObjects,Image|Threshold_OrigThreshold_DNAObjects,Image|Threshold_FinalThreshold_BacteriaObjects,Image|Threshold_FinalThreshold_DNAObjects,Image|Threshold_WeightedVariance_DNAObjects,Image|Threshold_WeightedVariance_BacteriaObjects,Image|Threshold_SumOfEntropies_DNAObjects,Image|Threshold_SumOfEntropies_BacteriaObjects,Image|URL_BacteriaImage,Image|URL_DNAImage,Image|Series_BacteriaImage,Image|Series_DNAImage,Image|Frame_DNAImage,Image|Frame_BacteriaImage,Image|PathName_DNAImage,Image|PathName_BacteriaImage,Image|Group_Number,Image|Group_Index,Image|Scaling_BacteriaImage,Image|Scaling_DNAImage,Image|Width_BacteriaImage,Image|Width_DNAImage,PositiveTreatedDNA|Intensity_StdIntensity_EnhancedDNAImage,PositiveTreatedDNA|Intensity_StdIntensity_InterestingDNAImage,PositiveTreatedDNA|Intensity_MaxIntensityEdge_InterestingDNAImage,PositiveTreatedDNA|Intensity_MaxIntensityEdge_EnhancedDNAImage,PositiveTreatedDNA|Intensity_MinIntensity_EnhancedDNAImage,PositiveTreatedDNA|Intensity_MinIntensity_InterestingDNAImage,PositiveTreatedDNA|Intensity_UpperQuartileIntensity_InterestingDNAImage,PositiveTreatedDNA|Intensity_UpperQuartileIntensity_EnhancedDNAImage,PositiveTreatedDNA|Intensity_StdIntensityEdge_EnhancedDNAImage,PositiveTreatedDNA|Intensity_StdIntensityEdge_InterestingDNAImage,PositiveTreatedDNA|Intensity_MaxIntensity_EnhancedDNAImage,PositiveTreatedDNA|Intensity_MaxIntensity_InterestingDNAImage,PositiveTreatedDNA|Intensity_MADIntensity_EnhancedDNAImage,PositiveTreatedDNA|Intensity_MADIntensity_InterestingDNAImage,PositiveTreatedDNA|Intensity_MinIntensityEdge_InterestingDNAImage,PositiveTreatedDNA|Intensity_MinIntensityEdge_EnhancedDNAImage,PositiveTreatedDNA|Intensity_MeanIntensity_EnhancedDNAImage,PositiveTreatedDNA|Intensity_MeanIntensity_InterestingDNAImage,PositiveTreatedDNA|Intensity_MedianIntensity_InterestingDNAImage,PositiveTreatedDNA|Intensity_MedianIntensity_EnhancedDNAImage,PositiveTreatedDNA|Intensity_LowerQuartileIntensity_InterestingDNAImage,PositiveTreatedDNA|Intensity_LowerQuartileIntensity_EnhancedDNAImage,PositiveTreatedDNA|Intensity_IntegratedIntensityEdge_EnhancedDNAImage,PositiveTreatedDNA|Intensity_IntegratedIntensityEdge_InterestingDNAImage,PositiveTreatedDNA|Intensity_MassDisplacement_InterestingDNAImage,PositiveTreatedDNA|Intensity_MassDisplacement_EnhancedDNAImage,PositiveTreatedDNA|Intensity_MeanIntensityEdge_InterestingDNAImage,PositiveTreatedDNA|Intensity_MeanIntensityEdge_EnhancedDNAImage,PositiveTreatedDNA|Intensity_IntegratedIntensity_InterestingDNAImage,PositiveTreatedDNA|Intensity_IntegratedIntensity_EnhancedDNAImage,PositiveTreatedDNA|AreaShape_Center_X,PositiveTreatedDNA|AreaShape_Center_Y,PositiveTreatedDNA|AreaShape_Zernike_8_8,PositiveTreatedDNA|AreaShape_Zernike_8_4,PositiveTreatedDNA|AreaShape_Zernike_8_6,PositiveTreatedDNA|AreaShape_Zernike_8_2,PositiveTreatedDNA|AreaShape_Zernike_8_0,PositiveTreatedDNA|AreaShape_Zernike_9_3,PositiveTreatedDNA|AreaShape_Zernike_9_9,PositiveTreatedDNA|AreaShape_Zernike_9_7,PositiveTreatedDNA|AreaShape_Zernike_9_5,PositiveTreatedDNA|AreaShape_Zernike_9_1,PositiveTreatedDNA|AreaShape_Zernike_7_5,PositiveTreatedDNA|AreaShape_Zernike_7_1,PositiveTreatedDNA|AreaShape_Zernike_7_7,PositiveTreatedDNA|AreaShape_Zernike_7_3,PositiveTreatedDNA|AreaShape_Zernike_6_4,PositiveTreatedDNA|AreaShape_Zernike_6_2,PositiveTreatedDNA|AreaShape_Zernike_6_0,PositiveTreatedDNA|AreaShape_Zernike_6_6,PositiveTreatedDNA|AreaShape_Zernike_2_0,PositiveTreatedDNA|AreaShape_Zernike_2_2,PositiveTreatedDNA|AreaShape_Zernike_4_2,PositiveTreatedDNA|AreaShape_Zernike_4_0,PositiveTreatedDNA|AreaShape_Zernike_4_4,PositiveTreatedDNA|AreaShape_Zernike_5_3,PositiveTreatedDNA|AreaShape_Zernike_5_1,PositiveTreatedDNA|AreaShape_Zernike_5_5,PositiveTreatedDNA|AreaShape_Zernike_0_0,PositiveTreatedDNA|AreaShape_Zernike_3_3,PositiveTreatedDNA|AreaShape_Zernike_3_1,PositiveTreatedDNA|AreaShape_Zernike_1_1,PositiveTreatedDNA|AreaShape_Eccentricity,PositiveTreatedDNA|AreaShape_Compactness,PositiveTreatedDNA|AreaShape_FormFactor,PositiveTreatedDNA|AreaShape_Extent,PositiveTreatedDNA|AreaShape_Solidity,PositiveTreatedDNA|AreaShape_BoundingBoxArea,PositiveTreatedDNA|AreaShape_EquivalentDiameter,PositiveTreatedDNA|AreaShape_MaxFeretDiameter,PositiveTreatedDNA|AreaShape_MeanRadius,PositiveTreatedDNA|AreaShape_BoundingBoxMinimum_X,PositiveTreatedDNA|AreaShape_BoundingBoxMinimum_Y,PositiveTreatedDNA|AreaShape_Orientation,PositiveTreatedDNA|AreaShape_MinFeretDiameter,PositiveTreatedDNA|AreaShape_MaximumRadius,PositiveTreatedDNA|AreaShape_MajorAxisLength,PositiveTreatedDNA|AreaShape_EulerNumber,PositiveTreatedDNA|AreaShape_Area,PositiveTreatedDNA|AreaShape_MinorAxisLength,PositiveTreatedDNA|AreaShape_MedianRadius,PositiveTreatedDNA|AreaShape_BoundingBoxMaximum_X,PositiveTreatedDNA|AreaShape_BoundingBoxMaximum_Y,PositiveTreatedDNA|AreaShape_Perimeter,PositiveTreatedDNA|Parent_InterestingDNAObjects,PositiveTreatedDNA|Parent_PositiveTreatedBacteria,PositiveTreatedDNA|Location_CenterMassIntensity_Y_EnhancedDNAImage,PositiveTreatedDNA|Location_CenterMassIntensity_Y_InterestingDNAImage,PositiveTreatedDNA|Location_CenterMassIntensity_Z_EnhancedDNAImage,PositiveTreatedDNA|Location_CenterMassIntensity_Z_InterestingDNAImage,PositiveTreatedDNA|Location_CenterMassIntensity_X_InterestingDNAImage,PositiveTreatedDNA|Location_CenterMassIntensity_X_EnhancedDNAImage,PositiveTreatedDNA|Location_Center_Y,PositiveTreatedDNA|Location_Center_X,PositiveTreatedDNA|Location_MaxIntensity_X_EnhancedDNAImage,PositiveTreatedDNA|Location_MaxIntensity_X_InterestingDNAImage,PositiveTreatedDNA|Location_MaxIntensity_Z_EnhancedDNAImage,PositiveTreatedDNA|Location_MaxIntensity_Z_InterestingDNAImage,PositiveTreatedDNA|Location_MaxIntensity_Y_EnhancedDNAImage,PositiveTreatedDNA|Location_MaxIntensity_Y_InterestingDNAImage,PositiveTreatedDNA|Number_Object_Number,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_5,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_3,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_1,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_7,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_4_4,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_4_2,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_4_0,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_5,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_3,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_9,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_7,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_1,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_0_0,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_2_0,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_2_2,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_8,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_4,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_0,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_6,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_2,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_3_1,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_3_3,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_1_1,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_5_5,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_5_3,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_5_1,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_4,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_2,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_0,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_6,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_5_3,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_5_1,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_5_5,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_4_4,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_4_2,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_4_0,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_4,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_2,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_6,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_0,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_5,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_1,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_3,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_7,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_9,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_3_1,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_3_3,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_1,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_7,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_5,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_3,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_2,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_0,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_6,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_4,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_8,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_1_1,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_2_0,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_2_2,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_0_0,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_7_1,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_7_5,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_7_3,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_7_7,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_6_6,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_6_4,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_6_2,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_6_0,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_9_5,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_9_7,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_9_9,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_9_3,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_9_1,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_3_3,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_3_1,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_5_5,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_5_1,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_5_3,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_8_8,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_8_2,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_8_6,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_8_4,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_8_0,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_4_2,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_4_0,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_4_4,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_1_1,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_2_0,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_2_2,InterestingBacteriaObjects|RadialDistribution_ZernikeMagnitude_DNAImage_0_0,InterestingBacteriaObjects|RadialDistribution_MeanFrac_DNAImage_6of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_DNAImage_Overflow,InterestingBacteriaObjects|RadialDistribution_MeanFrac_DNAImage_4of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_DNAImage_2of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_DNAImage_1of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_DNAImage_3of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_DNAImage_5of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_InterestingDNAImage_1of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_InterestingDNAImage_2of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_InterestingDNAImage_4of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_InterestingDNAImage_5of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_InterestingDNAImage_3of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_InterestingDNAImage_Overflow,InterestingBacteriaObjects|RadialDistribution_MeanFrac_InterestingDNAImage_6of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_EnhancedDNAImage_5of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_EnhancedDNAImage_Overflow,InterestingBacteriaObjects|RadialDistribution_MeanFrac_EnhancedDNAImage_3of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_EnhancedDNAImage_1of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_EnhancedDNAImage_6of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_EnhancedDNAImage_2of6,InterestingBacteriaObjects|RadialDistribution_MeanFrac_EnhancedDNAImage_4of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_DNAImage_6of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_DNAImage_Overflow,InterestingBacteriaObjects|RadialDistribution_RadialCV_DNAImage_4of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_DNAImage_2of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_DNAImage_5of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_DNAImage_1of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_DNAImage_3of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_InterestingDNAImage_2of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_InterestingDNAImage_Overflow,InterestingBacteriaObjects|RadialDistribution_RadialCV_InterestingDNAImage_3of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_InterestingDNAImage_6of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_InterestingDNAImage_4of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_InterestingDNAImage_1of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_InterestingDNAImage_5of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_EnhancedDNAImage_5of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_EnhancedDNAImage_3of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_EnhancedDNAImage_2of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_EnhancedDNAImage_4of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_EnhancedDNAImage_Overflow,InterestingBacteriaObjects|RadialDistribution_RadialCV_EnhancedDNAImage_1of6,InterestingBacteriaObjects|RadialDistribution_RadialCV_EnhancedDNAImage_6of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_DNAImage_2of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_DNAImage_3of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_DNAImage_6of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_DNAImage_1of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_DNAImage_Overflow,InterestingBacteriaObjects|RadialDistribution_FracAtD_DNAImage_5of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_DNAImage_4of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_InterestingDNAImage_Overflow,InterestingBacteriaObjects|RadialDistribution_FracAtD_InterestingDNAImage_3of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_InterestingDNAImage_6of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_InterestingDNAImage_4of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_InterestingDNAImage_1of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_InterestingDNAImage_5of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_InterestingDNAImage_2of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_EnhancedDNAImage_Overflow,InterestingBacteriaObjects|RadialDistribution_FracAtD_EnhancedDNAImage_6of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_EnhancedDNAImage_1of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_EnhancedDNAImage_4of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_EnhancedDNAImage_5of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_EnhancedDNAImage_3of6,InterestingBacteriaObjects|RadialDistribution_FracAtD_EnhancedDNAImage_2of6,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_2_0,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_2_2,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_8_4,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_8_8,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_8_0,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_8_2,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_8_6,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_1_1,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_9_3,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_9_1,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_9_9,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_9_5,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_9_7,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_5_5,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_5_3,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_5_1,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_3_3,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_3_1,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_6_0,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_6_2,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_6_4,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_6_6,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_7_7,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_7_5,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_7_1,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_7_3,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_0_0,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_4_0,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_4_4,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Zernike_4_2,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Center_X,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Center_Y,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_FormFactor,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_BoundingBoxMinimum_Y,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_BoundingBoxMinimum_X,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_MaximumRadius,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_MinorAxisLength,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_BoundingBoxMaximum_X,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_BoundingBoxMaximum_Y,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_MaxFeretDiameter,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_MinFeretDiameter,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Orientation,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_EulerNumber,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Extent,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_MedianRadius,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Compactness,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_EquivalentDiameter,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Eccentricity,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_BoundingBoxArea,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_MeanRadius,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Solidity,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Area,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_MajorAxisLength,InterestingBacteriaObjects|Mean_InterestingDNAObjects_AreaShape_Perimeter,InterestingBacteriaObjects|Mean_InterestingDNAObjects_Location_Center_Y,InterestingBacteriaObjects|Mean_InterestingDNAObjects_Location_Center_X,InterestingBacteriaObjects|Mean_InterestingDNAObjects_Number_Object_Number,InterestingBacteriaObjects|Children_NegativeTreatedBacteria_Count,InterestingBacteriaObjects|Children_InterestingDNAObjects_Count,InterestingBacteriaObjects|Children_NontreatedBacteria_Count,InterestingBacteriaObjects|Children_PositiveTreatedBacteria_Count,InterestingBacteriaObjects|Intensity_MADIntensity_InterestingDNAImage,InterestingBacteriaObjects|Intensity_MADIntensity_EnhancedDNAImage,InterestingBacteriaObjects|Intensity_MassDisplacement_InterestingDNAImage,InterestingBacteriaObjects|Intensity_MassDisplacement_EnhancedDNAImage,InterestingBacteriaObjects|Intensity_MeanIntensityEdge_EnhancedDNAImage,InterestingBacteriaObjects|Intensity_MeanIntensityEdge_InterestingDNAImage,InterestingBacteriaObjects|Intensity_MaxIntensity_EnhancedDNAImage,InterestingBacteriaObjects|Intensity_MaxIntensity_InterestingDNAImage,InterestingBacteriaObjects|Intensity_MedianIntensity_InterestingDNAImage,InterestingBacteriaObjects|Intensity_MedianIntensity_EnhancedDNAImage,InterestingBacteriaObjects|Intensity_StdIntensity_InterestingDNAImage,InterestingBacteriaObjects|Intensity_StdIntensity_EnhancedDNAImage,InterestingBacteriaObjects|Intensity_MeanIntensity_EnhancedDNAImage,InterestingBacteriaObjects|Intensity_MeanIntensity_InterestingDNAImage,InterestingBacteriaObjects|Intensity_LowerQuartileIntensity_InterestingDNAImage,InterestingBacteriaObjects|Intensity_LowerQuartileIntensity_EnhancedDNAImage,InterestingBacteriaObjects|Intensity_UpperQuartileIntensity_EnhancedDNAImage,InterestingBacteriaObjects|Intensity_UpperQuartileIntensity_InterestingDNAImage,InterestingBacteriaObjects|Intensity_MaxIntensityEdge_EnhancedDNAImage,InterestingBacteriaObjects|Intensity_MaxIntensityEdge_InterestingDNAImage,InterestingBacteriaObjects|Intensity_MinIntensityEdge_EnhancedDNAImage,InterestingBacteriaObjects|Intensity_MinIntensityEdge_InterestingDNAImage,InterestingBacteriaObjects|Intensity_IntegratedIntensity_InterestingDNAImage,InterestingBacteriaObjects|Intensity_IntegratedIntensity_EnhancedDNAImage,InterestingBacteriaObjects|Intensity_MinIntensity_InterestingDNAImage,InterestingBacteriaObjects|Intensity_MinIntensity_EnhancedDNAImage,InterestingBacteriaObjects|Intensity_StdIntensityEdge_EnhancedDNAImage,InterestingBacteriaObjects|Intensity_StdIntensityEdge_InterestingDNAImage,InterestingBacteriaObjects|Intensity_IntegratedIntensityEdge_EnhancedDNAImage,InterestingBacteriaObjects|Intensity_IntegratedIntensityEdge_InterestingDNAImage,InterestingBacteriaObjects|Location_CenterMassIntensity_Z_EnhancedDNAImage,InterestingBacteriaObjects|Location_CenterMassIntensity_Z_InterestingDNAImage,InterestingBacteriaObjects|Location_CenterMassIntensity_X_EnhancedDNAImage,InterestingBacteriaObjects|Location_CenterMassIntensity_X_InterestingDNAImage,InterestingBacteriaObjects|Location_CenterMassIntensity_Y_InterestingDNAImage,InterestingBacteriaObjects|Location_CenterMassIntensity_Y_EnhancedDNAImage,InterestingBacteriaObjects|Location_MaxIntensity_X_InterestingDNAImage,InterestingBacteriaObjects|Location_MaxIntensity_X_EnhancedDNAImage,InterestingBacteriaObjects|Location_MaxIntensity_Y_EnhancedDNAImage,InterestingBacteriaObjects|Location_MaxIntensity_Y_InterestingDNAImage,InterestingBacteriaObjects|Location_MaxIntensity_Z_InterestingDNAImage,InterestingBacteriaObjects|Location_MaxIntensity_Z_EnhancedDNAImage,InterestingBacteriaObjects|Location_Center_X,InterestingBacteriaObjects|Location_Center_Y,InterestingBacteriaObjects|Location_Center_Z,InterestingBacteriaObjects|Number_Object_Number,InterestingBacteriaObjects|Parent_MaskedBacteriaObjects,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MADIntensity_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MADIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MeanIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MeanIntensity_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_UpperQuartileIntensity_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_UpperQuartileIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MinIntensity_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MinIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MassDisplacement_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MassDisplacement_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MinIntensityEdge_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MinIntensityEdge_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MedianIntensity_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MedianIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_StdIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_StdIntensity_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_IntegratedIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_IntegratedIntensity_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MaxIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MaxIntensity_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_IntegratedIntensityEdge_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_IntegratedIntensityEdge_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MaxIntensityEdge_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MaxIntensityEdge_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_StdIntensityEdge_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_StdIntensityEdge_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MeanIntensityEdge_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_MeanIntensityEdge_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_LowerQuartileIntensity_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Intensity_LowerQuartileIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Eccentricity,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_MeanRadius,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_BoundingBoxMinimum_Y,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_BoundingBoxMinimum_X,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_MajorAxisLength,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_8_2,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_8_8,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_8_0,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_8_6,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_8_4,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_4_0,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_4_2,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_4_4,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_2_2,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_2_0,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_6_4,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_6_2,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_6_0,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_6_6,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_9_5,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_9_3,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_9_7,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_9_9,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_9_1,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_0_0,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_7_1,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_7_5,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_7_7,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_7_3,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_5_5,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_5_1,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_5_3,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_3_3,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_3_1,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Zernike_1_1,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_MinFeretDiameter,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Extent,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_BoundingBoxMaximum_X,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_BoundingBoxMaximum_Y,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Solidity,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Orientation,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_MedianRadius,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Area,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Perimeter,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_MaximumRadius,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_EquivalentDiameter,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Compactness,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_FormFactor,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_BoundingBoxArea,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_MinorAxisLength,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Center_Y,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_Center_X,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_MaxFeretDiameter,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_AreaShape_EulerNumber,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Location_CenterMassIntensity_X_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Location_CenterMassIntensity_X_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Location_CenterMassIntensity_Y_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Location_CenterMassIntensity_Y_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Location_CenterMassIntensity_Z_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Location_CenterMassIntensity_Z_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Location_MaxIntensity_Z_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Location_MaxIntensity_Z_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Location_MaxIntensity_X_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Location_MaxIntensity_X_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Location_MaxIntensity_Y_InterestingDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Location_MaxIntensity_Y_EnhancedDNAImage,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Location_Center_X,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Location_Center_Y,PositiveTreatedBacteria|Mean_PositiveTreatedDNA_Number_Object_Number,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_8_2,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_8_6,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_8_8,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_8_0,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_8_4,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_3_1,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_3_3,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_6_2,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_6_6,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_6_4,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_6_0,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_1_1,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_7_1,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_7_5,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_7_7,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_7_3,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_0_0,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_4_0,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_4_4,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_4_2,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_5_3,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_5_5,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_5_1,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_9_7,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_9_9,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_9_5,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_9_3,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_9_1,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_2_0,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_2_2,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_0_0,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_8_6,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_8_4,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_8_2,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_8_0,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_8_8,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_6_4,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_6_6,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_6_2,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_6_0,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_5_1,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_5_3,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_5_5,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_9_1,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_9_5,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_9_9,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_9_7,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_9_3,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_2_0,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_2_2,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_3_1,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_3_3,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_4_0,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_4_2,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_4_4,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_1_1,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_7_1,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_7_3,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_7_7,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_7_5,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_5_3,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_5_1,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_5_5,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_8_4,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_8_2,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_8_6,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_8_8,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_8_0,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_7_1,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_7_7,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_7_5,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_7_3,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_6_2,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_6_4,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_6_6,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_6_0,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_4_4,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_4_2,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_4_0,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_9_7,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_9_9,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_9_1,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_9_5,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_9_3,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_3_3,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_3_1,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_0_0,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_2_0,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_2_2,PositiveTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_1_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_7_7,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_7_5,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_7_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_7_3,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_8_0,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_8_2,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_8_8,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_8_4,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_8_6,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_6_6,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_6_4,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_6_0,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_6_2,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_9_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_9_5,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_9_9,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_9_7,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_9_3,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_1_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_3_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_3_3,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_2_2,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_2_0,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_4_0,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_4_2,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_4_4,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_5_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_5_5,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_5_3,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_0_0,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_1_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_6,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_4,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_2,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_8,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_0,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_5,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_7,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_3,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_0_0,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_5,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_7,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_9,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_3,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_5_5,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_5_3,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_5_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_4_2,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_4_0,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_4_4,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_0,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_2,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_6,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_4,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_2_2,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_2_0,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_3_3,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_3_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_4_2,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_4_4,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_4_0,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_5,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_3,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_7,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_4,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_0,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_8,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_2,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_6,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_3_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_3_3,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_2_2,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_2_0,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_1_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_0,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_6,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_4,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_2,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_9,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_5,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_7,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_3,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_5_3,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_5_5,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_5_1,PositiveTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_0_0,PositiveTreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_1of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_2of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_5of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_Overflow,PositiveTreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_4of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_3of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_6of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_DNAImage_2of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_DNAImage_3of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_DNAImage_Overflow,PositiveTreatedBacteria|RadialDistribution_MeanFrac_DNAImage_4of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_DNAImage_5of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_DNAImage_6of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_DNAImage_1of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_3of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_Overflow,PositiveTreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_4of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_2of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_6of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_1of6,PositiveTreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_5of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_5of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_3of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_1of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_2of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_6of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_Overflow,PositiveTreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_4of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_1of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_4of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_2of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_Overflow,PositiveTreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_5of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_3of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_6of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_DNAImage_5of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_DNAImage_6of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_DNAImage_4of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_DNAImage_Overflow,PositiveTreatedBacteria|RadialDistribution_RadialCV_DNAImage_1of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_DNAImage_2of6,PositiveTreatedBacteria|RadialDistribution_RadialCV_DNAImage_3of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_4of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_1of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_2of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_6of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_5of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_3of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_Overflow,PositiveTreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_Overflow,PositiveTreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_3of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_4of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_6of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_5of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_2of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_1of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_DNAImage_6of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_DNAImage_5of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_DNAImage_4of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_DNAImage_1of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_DNAImage_Overflow,PositiveTreatedBacteria|RadialDistribution_FracAtD_DNAImage_2of6,PositiveTreatedBacteria|RadialDistribution_FracAtD_DNAImage_3of6,PositiveTreatedBacteria|Location_CenterMassIntensity_X_InterestingDNAImage,PositiveTreatedBacteria|Location_CenterMassIntensity_X_EnhancedDNAImage,PositiveTreatedBacteria|Location_CenterMassIntensity_Y_InterestingDNAImage,PositiveTreatedBacteria|Location_CenterMassIntensity_Y_EnhancedDNAImage,PositiveTreatedBacteria|Location_CenterMassIntensity_Z_InterestingDNAImage,PositiveTreatedBacteria|Location_CenterMassIntensity_Z_EnhancedDNAImage,PositiveTreatedBacteria|Location_MaxIntensity_Y_InterestingDNAImage,PositiveTreatedBacteria|Location_MaxIntensity_Y_EnhancedDNAImage,PositiveTreatedBacteria|Location_MaxIntensity_Z_InterestingDNAImage,PositiveTreatedBacteria|Location_MaxIntensity_Z_EnhancedDNAImage,PositiveTreatedBacteria|Location_MaxIntensity_X_EnhancedDNAImage,PositiveTreatedBacteria|Location_MaxIntensity_X_InterestingDNAImage,PositiveTreatedBacteria|Location_Center_Z,PositiveTreatedBacteria|Location_Center_Y,PositiveTreatedBacteria|Location_Center_X,PositiveTreatedBacteria|Intensity_IntegratedIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Intensity_IntegratedIntensity_InterestingDNAImage,PositiveTreatedBacteria|Intensity_MeanIntensity_InterestingDNAImage,PositiveTreatedBacteria|Intensity_MeanIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Intensity_MedianIntensity_InterestingDNAImage,PositiveTreatedBacteria|Intensity_MedianIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Intensity_IntegratedIntensityEdge_InterestingDNAImage,PositiveTreatedBacteria|Intensity_IntegratedIntensityEdge_EnhancedDNAImage,PositiveTreatedBacteria|Intensity_MassDisplacement_InterestingDNAImage,PositiveTreatedBacteria|Intensity_MassDisplacement_EnhancedDNAImage,PositiveTreatedBacteria|Intensity_UpperQuartileIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Intensity_UpperQuartileIntensity_InterestingDNAImage,PositiveTreatedBacteria|Intensity_MinIntensityEdge_InterestingDNAImage,PositiveTreatedBacteria|Intensity_MinIntensityEdge_EnhancedDNAImage,PositiveTreatedBacteria|Intensity_MaxIntensityEdge_InterestingDNAImage,PositiveTreatedBacteria|Intensity_MaxIntensityEdge_EnhancedDNAImage,PositiveTreatedBacteria|Intensity_MaxIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Intensity_MaxIntensity_InterestingDNAImage,PositiveTreatedBacteria|Intensity_LowerQuartileIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Intensity_LowerQuartileIntensity_InterestingDNAImage,PositiveTreatedBacteria|Intensity_StdIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Intensity_StdIntensity_InterestingDNAImage,PositiveTreatedBacteria|Intensity_MinIntensity_EnhancedDNAImage,PositiveTreatedBacteria|Intensity_MinIntensity_InterestingDNAImage,PositiveTreatedBacteria|Intensity_StdIntensityEdge_InterestingDNAImage,PositiveTreatedBacteria|Intensity_StdIntensityEdge_EnhancedDNAImage,PositiveTreatedBacteria|Intensity_MeanIntensityEdge_InterestingDNAImage,PositiveTreatedBacteria|Intensity_MeanIntensityEdge_EnhancedDNAImage,PositiveTreatedBacteria|Intensity_MADIntensity_InterestingDNAImage,PositiveTreatedBacteria|Intensity_MADIntensity_EnhancedDNAImage,PositiveTreatedBacteria|AreaShape_Solidity,PositiveTreatedBacteria|AreaShape_Zernike_5_3,PositiveTreatedBacteria|AreaShape_Zernike_5_5,PositiveTreatedBacteria|AreaShape_Zernike_5_1,PositiveTreatedBacteria|AreaShape_Zernike_7_5,PositiveTreatedBacteria|AreaShape_Zernike_7_3,PositiveTreatedBacteria|AreaShape_Zernike_7_1,PositiveTreatedBacteria|AreaShape_Zernike_7_7,PositiveTreatedBacteria|AreaShape_Zernike_3_3,PositiveTreatedBacteria|AreaShape_Zernike_3_1,PositiveTreatedBacteria|AreaShape_Zernike_8_8,PositiveTreatedBacteria|AreaShape_Zernike_8_4,PositiveTreatedBacteria|AreaShape_Zernike_8_6,PositiveTreatedBacteria|AreaShape_Zernike_8_2,PositiveTreatedBacteria|AreaShape_Zernike_8_0,PositiveTreatedBacteria|AreaShape_Zernike_9_9,PositiveTreatedBacteria|AreaShape_Zernike_9_7,PositiveTreatedBacteria|AreaShape_Zernike_9_1,PositiveTreatedBacteria|AreaShape_Zernike_9_3,PositiveTreatedBacteria|AreaShape_Zernike_9_5,PositiveTreatedBacteria|AreaShape_Zernike_6_0,PositiveTreatedBacteria|AreaShape_Zernike_6_4,PositiveTreatedBacteria|AreaShape_Zernike_6_6,PositiveTreatedBacteria|AreaShape_Zernike_6_2,PositiveTreatedBacteria|AreaShape_Zernike_2_0,PositiveTreatedBacteria|AreaShape_Zernike_2_2,PositiveTreatedBacteria|AreaShape_Zernike_1_1,PositiveTreatedBacteria|AreaShape_Zernike_4_4,PositiveTreatedBacteria|AreaShape_Zernike_4_0,PositiveTreatedBacteria|AreaShape_Zernike_4_2,PositiveTreatedBacteria|AreaShape_Zernike_0_0,PositiveTreatedBacteria|AreaShape_MaxFeretDiameter,PositiveTreatedBacteria|AreaShape_EquivalentDiameter,PositiveTreatedBacteria|AreaShape_MedianRadius,PositiveTreatedBacteria|AreaShape_BoundingBoxMaximum_Y,PositiveTreatedBacteria|AreaShape_BoundingBoxMaximum_X,PositiveTreatedBacteria|AreaShape_Center_X,PositiveTreatedBacteria|AreaShape_Center_Y,PositiveTreatedBacteria|AreaShape_BoundingBoxMinimum_Y,PositiveTreatedBacteria|AreaShape_BoundingBoxMinimum_X,PositiveTreatedBacteria|AreaShape_FormFactor,PositiveTreatedBacteria|AreaShape_BoundingBoxArea,PositiveTreatedBacteria|AreaShape_EulerNumber,PositiveTreatedBacteria|AreaShape_MajorAxisLength,PositiveTreatedBacteria|AreaShape_MeanRadius,PositiveTreatedBacteria|AreaShape_Extent,PositiveTreatedBacteria|AreaShape_Eccentricity,PositiveTreatedBacteria|AreaShape_MaximumRadius,PositiveTreatedBacteria|AreaShape_Area,PositiveTreatedBacteria|AreaShape_Orientation,PositiveTreatedBacteria|AreaShape_MinFeretDiameter,PositiveTreatedBacteria|AreaShape_Perimeter,PositiveTreatedBacteria|AreaShape_Compactness,PositiveTreatedBacteria|AreaShape_MinorAxisLength,PositiveTreatedBacteria|Number_Object_Number,PositiveTreatedBacteria|Parent_InterestingBacteriaObjects,PositiveTreatedBacteria|Children_PositiveTreatedDNA_Count,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_9_3,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_9_5,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_9_7,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_9_9,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_9_1,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_0_0,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_8_8,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_8_2,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_8_4,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_8_0,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_8_6,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_6_0,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_6_6,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_6_4,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_6_2,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_5_5,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_5_1,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_5_3,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_2_0,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_2_2,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_4_4,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_4_2,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_4_0,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_7_3,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_7_5,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_7_7,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_7_1,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_3_3,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_3_1,NontreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_1_1,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_0_0,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_6_4,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_6_0,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_6_6,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_6_2,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_3_1,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_3_3,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_7_5,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_7_3,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_7_1,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_7_7,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_5_3,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_5_1,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_5_5,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_9_3,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_9_1,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_9_7,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_9_9,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_9_5,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_4_0,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_4_4,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_4_2,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_8_0,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_8_6,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_8_4,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_8_2,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_8_8,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_2_0,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_2_2,NontreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_1_1,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_8_6,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_8_2,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_8_0,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_8_8,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_8_4,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_3_1,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_3_3,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_7_1,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_7_3,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_7_5,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_7_7,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_5_5,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_5_1,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_5_3,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_9_7,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_9_3,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_9_9,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_9_1,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_9_5,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_6_0,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_6_2,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_6_6,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_6_4,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_2_0,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_2_2,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_0_0,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_4_0,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_4_4,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_4_2,NontreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_1_1,NontreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_Overflow,NontreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_2of6,NontreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_6of6,NontreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_1of6,NontreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_4of6,NontreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_3of6,NontreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_5of6,NontreatedBacteria|RadialDistribution_RadialCV_DNAImage_1of6,NontreatedBacteria|RadialDistribution_RadialCV_DNAImage_6of6,NontreatedBacteria|RadialDistribution_RadialCV_DNAImage_3of6,NontreatedBacteria|RadialDistribution_RadialCV_DNAImage_5of6,NontreatedBacteria|RadialDistribution_RadialCV_DNAImage_Overflow,NontreatedBacteria|RadialDistribution_RadialCV_DNAImage_2of6,NontreatedBacteria|RadialDistribution_RadialCV_DNAImage_4of6,NontreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_Overflow,NontreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_5of6,NontreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_6of6,NontreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_3of6,NontreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_4of6,NontreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_1of6,NontreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_2of6,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_2,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_0,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_6,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_8,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_4,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_3_1,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_3_3,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_4_2,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_4_0,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_4_4,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_2,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_4,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_6,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_0,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_5,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_3,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_9,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_7,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_1,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_0_0,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_3,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_7,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_1,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_5,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_2_0,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_2_2,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_5_1,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_5_3,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_5_5,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_1_1,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_8_0,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_8_2,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_8_4,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_8_6,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_8_8,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_4_4,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_4_2,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_4_0,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_9_3,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_9_9,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_9_7,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_9_5,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_9_1,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_2_2,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_2_0,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_5_5,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_5_1,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_5_3,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_6_2,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_6_4,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_6_0,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_6_6,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_0_0,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_3_3,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_3_1,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_7_5,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_7_1,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_7_7,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_7_3,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_1_1,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_5,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_3,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_7,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_9,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_1,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_3,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_1,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_7,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_5,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_2,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_0,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_8,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_6,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_4,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_6,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_4,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_0,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_2,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_2_0,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_2_2,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_4_0,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_4_4,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_4_2,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_1_1,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_5_3,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_5_5,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_5_1,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_3_1,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_3_3,NontreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_0_0,NontreatedBacteria|RadialDistribution_FracAtD_DNAImage_3of6,NontreatedBacteria|RadialDistribution_FracAtD_DNAImage_1of6,NontreatedBacteria|RadialDistribution_FracAtD_DNAImage_2of6,NontreatedBacteria|RadialDistribution_FracAtD_DNAImage_Overflow,NontreatedBacteria|RadialDistribution_FracAtD_DNAImage_4of6,NontreatedBacteria|RadialDistribution_FracAtD_DNAImage_5of6,NontreatedBacteria|RadialDistribution_FracAtD_DNAImage_6of6,NontreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_3of6,NontreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_Overflow,NontreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_2of6,NontreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_4of6,NontreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_5of6,NontreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_6of6,NontreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_1of6,NontreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_3of6,NontreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_5of6,NontreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_2of6,NontreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_4of6,NontreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_6of6,NontreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_1of6,NontreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_Overflow,NontreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_1of6,NontreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_4of6,NontreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_3of6,NontreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_5of6,NontreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_Overflow,NontreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_6of6,NontreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_2of6,NontreatedBacteria|RadialDistribution_MeanFrac_DNAImage_4of6,NontreatedBacteria|RadialDistribution_MeanFrac_DNAImage_Overflow,NontreatedBacteria|RadialDistribution_MeanFrac_DNAImage_3of6,NontreatedBacteria|RadialDistribution_MeanFrac_DNAImage_6of6,NontreatedBacteria|RadialDistribution_MeanFrac_DNAImage_5of6,NontreatedBacteria|RadialDistribution_MeanFrac_DNAImage_1of6,NontreatedBacteria|RadialDistribution_MeanFrac_DNAImage_2of6,NontreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_3of6,NontreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_1of6,NontreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_6of6,NontreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_2of6,NontreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_4of6,NontreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_Overflow,NontreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_5of6,NontreatedBacteria|Mean_NontreatedDNA_Intensity_StdIntensityEdge_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_StdIntensityEdge_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_LowerQuartileIntensity_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_LowerQuartileIntensity_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MedianIntensity_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MedianIntensity_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_StdIntensity_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_StdIntensity_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MinIntensityEdge_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MinIntensityEdge_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_IntegratedIntensity_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_IntegratedIntensity_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MinIntensity_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MinIntensity_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MaxIntensity_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MaxIntensity_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MeanIntensityEdge_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MeanIntensityEdge_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MeanIntensity_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MeanIntensity_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MassDisplacement_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MassDisplacement_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_IntegratedIntensityEdge_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_IntegratedIntensityEdge_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MADIntensity_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MADIntensity_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MaxIntensityEdge_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_MaxIntensityEdge_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_UpperQuartileIntensity_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Intensity_UpperQuartileIntensity_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_9_5,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_9_3,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_9_1,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_9_7,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_9_9,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_5_5,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_5_3,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_5_1,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_2_0,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_2_2,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_6_4,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_6_2,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_6_0,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_6_6,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_4_4,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_4_0,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_4_2,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_8_2,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_8_0,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_8_6,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_8_4,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_8_8,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_0_0,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_1_1,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_7_5,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_7_3,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_7_7,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_7_1,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_3_1,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Zernike_3_3,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_EulerNumber,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_BoundingBoxArea,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_MinFeretDiameter,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Extent,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_BoundingBoxMinimum_Y,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_BoundingBoxMinimum_X,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Perimeter,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_FormFactor,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_MajorAxisLength,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Eccentricity,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_MedianRadius,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_MaximumRadius,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Center_Y,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Center_X,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_BoundingBoxMaximum_X,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_BoundingBoxMaximum_Y,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_MinorAxisLength,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Compactness,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_MeanRadius,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_MaxFeretDiameter,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_EquivalentDiameter,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Area,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Solidity,NontreatedBacteria|Mean_NontreatedDNA_AreaShape_Orientation,NontreatedBacteria|Mean_NontreatedDNA_Location_MaxIntensity_X_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Location_MaxIntensity_X_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Location_MaxIntensity_Y_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Location_MaxIntensity_Y_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Location_MaxIntensity_Z_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Location_MaxIntensity_Z_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Location_Center_X,NontreatedBacteria|Mean_NontreatedDNA_Location_Center_Y,NontreatedBacteria|Mean_NontreatedDNA_Location_CenterMassIntensity_Z_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Location_CenterMassIntensity_Z_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Location_CenterMassIntensity_Y_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Location_CenterMassIntensity_Y_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Location_CenterMassIntensity_X_EnhancedDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Location_CenterMassIntensity_X_InterestingDNAImage,NontreatedBacteria|Mean_NontreatedDNA_Number_Object_Number,NontreatedBacteria|AreaShape_Zernike_2_0,NontreatedBacteria|AreaShape_Zernike_2_2,NontreatedBacteria|AreaShape_Zernike_7_3,NontreatedBacteria|AreaShape_Zernike_7_7,NontreatedBacteria|AreaShape_Zernike_7_5,NontreatedBacteria|AreaShape_Zernike_7_1,NontreatedBacteria|AreaShape_Zernike_4_4,NontreatedBacteria|AreaShape_Zernike_4_2,NontreatedBacteria|AreaShape_Zernike_4_0,NontreatedBacteria|AreaShape_Zernike_8_2,NontreatedBacteria|AreaShape_Zernike_8_4,NontreatedBacteria|AreaShape_Zernike_8_0,NontreatedBacteria|AreaShape_Zernike_8_6,NontreatedBacteria|AreaShape_Zernike_8_8,NontreatedBacteria|AreaShape_Zernike_6_4,NontreatedBacteria|AreaShape_Zernike_6_2,NontreatedBacteria|AreaShape_Zernike_6_0,NontreatedBacteria|AreaShape_Zernike_6_6,NontreatedBacteria|AreaShape_Zernike_9_1,NontreatedBacteria|AreaShape_Zernike_9_5,NontreatedBacteria|AreaShape_Zernike_9_7,NontreatedBacteria|AreaShape_Zernike_9_9,NontreatedBacteria|AreaShape_Zernike_9_3,NontreatedBacteria|AreaShape_Zernike_1_1,NontreatedBacteria|AreaShape_Zernike_3_3,NontreatedBacteria|AreaShape_Zernike_3_1,NontreatedBacteria|AreaShape_Zernike_5_5,NontreatedBacteria|AreaShape_Zernike_5_3,NontreatedBacteria|AreaShape_Zernike_5_1,NontreatedBacteria|AreaShape_Zernike_0_0,NontreatedBacteria|AreaShape_Eccentricity,NontreatedBacteria|AreaShape_EulerNumber,NontreatedBacteria|AreaShape_EquivalentDiameter,NontreatedBacteria|AreaShape_Compactness,NontreatedBacteria|AreaShape_Orientation,NontreatedBacteria|AreaShape_Area,NontreatedBacteria|AreaShape_MaximumRadius,NontreatedBacteria|AreaShape_BoundingBoxArea,NontreatedBacteria|AreaShape_MinorAxisLength,NontreatedBacteria|AreaShape_Extent,NontreatedBacteria|AreaShape_BoundingBoxMinimum_Y,NontreatedBacteria|AreaShape_BoundingBoxMinimum_X,NontreatedBacteria|AreaShape_MeanRadius,NontreatedBacteria|AreaShape_MinFeretDiameter,NontreatedBacteria|AreaShape_BoundingBoxMaximum_Y,NontreatedBacteria|AreaShape_BoundingBoxMaximum_X,NontreatedBacteria|AreaShape_Solidity,NontreatedBacteria|AreaShape_MajorAxisLength,NontreatedBacteria|AreaShape_MaxFeretDiameter,NontreatedBacteria|AreaShape_FormFactor,NontreatedBacteria|AreaShape_MedianRadius,NontreatedBacteria|AreaShape_Center_X,NontreatedBacteria|AreaShape_Center_Y,NontreatedBacteria|AreaShape_Perimeter,NontreatedBacteria|Intensity_MinIntensityEdge_InterestingDNAImage,NontreatedBacteria|Intensity_MinIntensityEdge_EnhancedDNAImage,NontreatedBacteria|Intensity_MeanIntensityEdge_InterestingDNAImage,NontreatedBacteria|Intensity_MeanIntensityEdge_EnhancedDNAImage,NontreatedBacteria|Intensity_StdIntensity_EnhancedDNAImage,NontreatedBacteria|Intensity_StdIntensity_InterestingDNAImage,NontreatedBacteria|Intensity_MeanIntensity_EnhancedDNAImage,NontreatedBacteria|Intensity_MeanIntensity_InterestingDNAImage,NontreatedBacteria|Intensity_MaxIntensityEdge_EnhancedDNAImage,NontreatedBacteria|Intensity_MaxIntensityEdge_InterestingDNAImage,NontreatedBacteria|Intensity_MedianIntensity_EnhancedDNAImage,NontreatedBacteria|Intensity_MedianIntensity_InterestingDNAImage,NontreatedBacteria|Intensity_StdIntensityEdge_EnhancedDNAImage,NontreatedBacteria|Intensity_StdIntensityEdge_InterestingDNAImage,NontreatedBacteria|Intensity_LowerQuartileIntensity_EnhancedDNAImage,NontreatedBacteria|Intensity_LowerQuartileIntensity_InterestingDNAImage,NontreatedBacteria|Intensity_IntegratedIntensityEdge_InterestingDNAImage,NontreatedBacteria|Intensity_IntegratedIntensityEdge_EnhancedDNAImage,NontreatedBacteria|Intensity_MADIntensity_EnhancedDNAImage,NontreatedBacteria|Intensity_MADIntensity_InterestingDNAImage,NontreatedBacteria|Intensity_IntegratedIntensity_InterestingDNAImage,NontreatedBacteria|Intensity_IntegratedIntensity_EnhancedDNAImage,NontreatedBacteria|Intensity_MassDisplacement_EnhancedDNAImage,NontreatedBacteria|Intensity_MassDisplacement_InterestingDNAImage,NontreatedBacteria|Intensity_MinIntensity_EnhancedDNAImage,NontreatedBacteria|Intensity_MinIntensity_InterestingDNAImage,NontreatedBacteria|Intensity_MaxIntensity_EnhancedDNAImage,NontreatedBacteria|Intensity_MaxIntensity_InterestingDNAImage,NontreatedBacteria|Intensity_UpperQuartileIntensity_InterestingDNAImage,NontreatedBacteria|Intensity_UpperQuartileIntensity_EnhancedDNAImage,NontreatedBacteria|Location_MaxIntensity_Y_InterestingDNAImage,NontreatedBacteria|Location_MaxIntensity_Y_EnhancedDNAImage,NontreatedBacteria|Location_MaxIntensity_X_EnhancedDNAImage,NontreatedBacteria|Location_MaxIntensity_X_InterestingDNAImage,NontreatedBacteria|Location_MaxIntensity_Z_InterestingDNAImage,NontreatedBacteria|Location_MaxIntensity_Z_EnhancedDNAImage,NontreatedBacteria|Location_Center_X,NontreatedBacteria|Location_Center_Z,NontreatedBacteria|Location_Center_Y,NontreatedBacteria|Location_CenterMassIntensity_X_InterestingDNAImage,NontreatedBacteria|Location_CenterMassIntensity_X_EnhancedDNAImage,NontreatedBacteria|Location_CenterMassIntensity_Z_EnhancedDNAImage,NontreatedBacteria|Location_CenterMassIntensity_Z_InterestingDNAImage,NontreatedBacteria|Location_CenterMassIntensity_Y_InterestingDNAImage,NontreatedBacteria|Location_CenterMassIntensity_Y_EnhancedDNAImage,NontreatedBacteria|Number_Object_Number,NontreatedBacteria|Children_NontreatedDNA_Count,NontreatedBacteria|Parent_InterestingBacteriaObjects,NontreatedDNA|AreaShape_Zernike_5_5,NontreatedDNA|AreaShape_Zernike_5_3,NontreatedDNA|AreaShape_Zernike_5_1,NontreatedDNA|AreaShape_Zernike_2_0,NontreatedDNA|AreaShape_Zernike_2_2,NontreatedDNA|AreaShape_Zernike_3_3,NontreatedDNA|AreaShape_Zernike_3_1,NontreatedDNA|AreaShape_Zernike_6_0,NontreatedDNA|AreaShape_Zernike_6_2,NontreatedDNA|AreaShape_Zernike_6_4,NontreatedDNA|AreaShape_Zernike_6_6,NontreatedDNA|AreaShape_Zernike_9_9,NontreatedDNA|AreaShape_Zernike_9_5,NontreatedDNA|AreaShape_Zernike_9_3,NontreatedDNA|AreaShape_Zernike_9_7,NontreatedDNA|AreaShape_Zernike_9_1,NontreatedDNA|AreaShape_Zernike_8_6,NontreatedDNA|AreaShape_Zernike_8_2,NontreatedDNA|AreaShape_Zernike_8_0,NontreatedDNA|AreaShape_Zernike_8_4,NontreatedDNA|AreaShape_Zernike_8_8,NontreatedDNA|AreaShape_Zernike_1_1,NontreatedDNA|AreaShape_Zernike_7_7,NontreatedDNA|AreaShape_Zernike_7_3,NontreatedDNA|AreaShape_Zernike_7_1,NontreatedDNA|AreaShape_Zernike_7_5,NontreatedDNA|AreaShape_Zernike_4_0,NontreatedDNA|AreaShape_Zernike_4_4,NontreatedDNA|AreaShape_Zernike_4_2,NontreatedDNA|AreaShape_Zernike_0_0,NontreatedDNA|AreaShape_Compactness,NontreatedDNA|AreaShape_Center_Y,NontreatedDNA|AreaShape_Center_X,NontreatedDNA|AreaShape_Extent,NontreatedDNA|AreaShape_MinorAxisLength,NontreatedDNA|AreaShape_Perimeter,NontreatedDNA|AreaShape_MinFeretDiameter,NontreatedDNA|AreaShape_BoundingBoxMaximum_X,NontreatedDNA|AreaShape_BoundingBoxMaximum_Y,NontreatedDNA|AreaShape_EquivalentDiameter,NontreatedDNA|AreaShape_FormFactor,NontreatedDNA|AreaShape_MedianRadius,NontreatedDNA|AreaShape_MeanRadius,NontreatedDNA|AreaShape_BoundingBoxMinimum_Y,NontreatedDNA|AreaShape_BoundingBoxMinimum_X,NontreatedDNA|AreaShape_EulerNumber,NontreatedDNA|AreaShape_Solidity,NontreatedDNA|AreaShape_MaximumRadius,NontreatedDNA|AreaShape_BoundingBoxArea,NontreatedDNA|AreaShape_MaxFeretDiameter,NontreatedDNA|AreaShape_Orientation,NontreatedDNA|AreaShape_Area,NontreatedDNA|AreaShape_Eccentricity,NontreatedDNA|AreaShape_MajorAxisLength,NontreatedDNA|Location_CenterMassIntensity_Z_EnhancedDNAImage,NontreatedDNA|Location_CenterMassIntensity_Z_InterestingDNAImage,NontreatedDNA|Location_CenterMassIntensity_X_InterestingDNAImage,NontreatedDNA|Location_CenterMassIntensity_X_EnhancedDNAImage,NontreatedDNA|Location_CenterMassIntensity_Y_InterestingDNAImage,NontreatedDNA|Location_CenterMassIntensity_Y_EnhancedDNAImage,NontreatedDNA|Location_Center_X,NontreatedDNA|Location_Center_Y,NontreatedDNA|Location_MaxIntensity_Z_EnhancedDNAImage,NontreatedDNA|Location_MaxIntensity_Z_InterestingDNAImage,NontreatedDNA|Location_MaxIntensity_Y_InterestingDNAImage,NontreatedDNA|Location_MaxIntensity_Y_EnhancedDNAImage,NontreatedDNA|Location_MaxIntensity_X_EnhancedDNAImage,NontreatedDNA|Location_MaxIntensity_X_InterestingDNAImage,NontreatedDNA|Intensity_LowerQuartileIntensity_InterestingDNAImage,NontreatedDNA|Intensity_LowerQuartileIntensity_EnhancedDNAImage,NontreatedDNA|Intensity_MedianIntensity_InterestingDNAImage,NontreatedDNA|Intensity_MedianIntensity_EnhancedDNAImage,NontreatedDNA|Intensity_MinIntensityEdge_EnhancedDNAImage,NontreatedDNA|Intensity_MinIntensityEdge_InterestingDNAImage,NontreatedDNA|Intensity_MinIntensity_EnhancedDNAImage,NontreatedDNA|Intensity_MinIntensity_InterestingDNAImage,NontreatedDNA|Intensity_MeanIntensity_EnhancedDNAImage,NontreatedDNA|Intensity_MeanIntensity_InterestingDNAImage,NontreatedDNA|Intensity_IntegratedIntensityEdge_InterestingDNAImage,NontreatedDNA|Intensity_IntegratedIntensityEdge_EnhancedDNAImage,NontreatedDNA|Intensity_MaxIntensityEdge_EnhancedDNAImage,NontreatedDNA|Intensity_MaxIntensityEdge_InterestingDNAImage,NontreatedDNA|Intensity_MADIntensity_EnhancedDNAImage,NontreatedDNA|Intensity_MADIntensity_InterestingDNAImage,NontreatedDNA|Intensity_UpperQuartileIntensity_EnhancedDNAImage,NontreatedDNA|Intensity_UpperQuartileIntensity_InterestingDNAImage,NontreatedDNA|Intensity_MassDisplacement_EnhancedDNAImage,NontreatedDNA|Intensity_MassDisplacement_InterestingDNAImage,NontreatedDNA|Intensity_MaxIntensity_InterestingDNAImage,NontreatedDNA|Intensity_MaxIntensity_EnhancedDNAImage,NontreatedDNA|Intensity_IntegratedIntensity_InterestingDNAImage,NontreatedDNA|Intensity_IntegratedIntensity_EnhancedDNAImage,NontreatedDNA|Intensity_MeanIntensityEdge_EnhancedDNAImage,NontreatedDNA|Intensity_MeanIntensityEdge_InterestingDNAImage,NontreatedDNA|Intensity_StdIntensityEdge_EnhancedDNAImage,NontreatedDNA|Intensity_StdIntensityEdge_InterestingDNAImage,NontreatedDNA|Intensity_StdIntensity_InterestingDNAImage,NontreatedDNA|Intensity_StdIntensity_EnhancedDNAImage,NontreatedDNA|Parent_InterestingDNAObjects,NontreatedDNA|Parent_NontreatedBacteria,NontreatedDNA|Number_Object_Number,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MassDisplacement_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MassDisplacement_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MaxIntensity_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MaxIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MinIntensity_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MinIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_IntegratedIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_IntegratedIntensity_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_StdIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_StdIntensity_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_IntegratedIntensityEdge_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_IntegratedIntensityEdge_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MeanIntensityEdge_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MeanIntensityEdge_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_LowerQuartileIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_LowerQuartileIntensity_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_StdIntensityEdge_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_StdIntensityEdge_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MeanIntensity_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MeanIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_UpperQuartileIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_UpperQuartileIntensity_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MedianIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MedianIntensity_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MinIntensityEdge_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MinIntensityEdge_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MADIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MADIntensity_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MaxIntensityEdge_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Intensity_MaxIntensityEdge_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Eccentricity,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_4_0,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_4_2,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_4_4,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_2_2,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_2_0,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_7_5,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_7_1,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_7_7,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_7_3,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_5_5,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_5_3,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_5_1,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_0_0,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_6_0,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_6_4,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_6_2,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_6_6,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_8_8,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_8_2,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_8_4,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_8_0,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_8_6,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_3_1,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_3_3,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_9_9,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_9_1,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_9_7,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_9_3,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_9_5,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Zernike_1_1,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_BoundingBoxArea,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Center_X,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Center_Y,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Area,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Extent,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_MinFeretDiameter,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Perimeter,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_MajorAxisLength,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_MaxFeretDiameter,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_MeanRadius,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Compactness,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_FormFactor,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_BoundingBoxMaximum_Y,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_BoundingBoxMaximum_X,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Orientation,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_MaximumRadius,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_BoundingBoxMinimum_X,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_BoundingBoxMinimum_Y,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_Solidity,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_MedianRadius,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_EulerNumber,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_MinorAxisLength,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_AreaShape_EquivalentDiameter,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Location_Center_Y,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Location_Center_X,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Location_CenterMassIntensity_X_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Location_CenterMassIntensity_X_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Location_CenterMassIntensity_Y_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Location_CenterMassIntensity_Y_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Location_CenterMassIntensity_Z_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Location_CenterMassIntensity_Z_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Location_MaxIntensity_X_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Location_MaxIntensity_X_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Location_MaxIntensity_Z_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Location_MaxIntensity_Z_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Location_MaxIntensity_Y_InterestingDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Location_MaxIntensity_Y_EnhancedDNAImage,NegativeTreatedBacteria|Mean_NegativeTreatedDNA_Number_Object_Number,NegativeTreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_Overflow,NegativeTreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_4of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_2of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_3of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_6of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_5of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_EnhancedDNAImage_1of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_DNAImage_1of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_DNAImage_Overflow,NegativeTreatedBacteria|RadialDistribution_RadialCV_DNAImage_6of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_DNAImage_5of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_DNAImage_4of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_DNAImage_3of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_DNAImage_2of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_2of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_6of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_3of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_Overflow,NegativeTreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_1of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_5of6,NegativeTreatedBacteria|RadialDistribution_RadialCV_InterestingDNAImage_4of6,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_9_3,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_9_7,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_9_9,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_9_5,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_9_1,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_5_3,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_5_5,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_5_1,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_0_0,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_7_5,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_7_7,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_7_3,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_7_1,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_3_1,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_3_3,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_8_4,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_8_2,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_8_0,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_8_6,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_8_8,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_4_4,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_4_0,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_4_2,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_2_2,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_2_0,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_6_0,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_6_2,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_6_4,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_6_6,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_DNAImage_1_1,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_2_2,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_2_0,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_3_3,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_3_1,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_5_1,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_5_5,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_5_3,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_0,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_6,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_4,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_6_2,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_0_0,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_4_0,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_4_4,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_4_2,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_0,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_8,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_6,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_4,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_8_2,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_5,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_9,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_3,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_7,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_9_1,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_5,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_1,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_7,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_7_3,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_InterestingDNAImage_1_1,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_5_3,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_5_5,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_5_1,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_2,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_4,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_0,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_6_6,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_7,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_5,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_1,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_7_3,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_5,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_7,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_1,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_3,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_9_9,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_4_0,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_4_2,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_4_4,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_2_2,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_2_0,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_0,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_4,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_2,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_8,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_8_6,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_3_1,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_3_3,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_0_0,NegativeTreatedBacteria|RadialDistribution_ZernikeMagnitude_EnhancedDNAImage_1_1,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_6_4,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_6_2,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_6_6,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_6_0,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_4_4,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_4_0,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_4_2,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_3_1,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_3_3,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_9_1,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_9_5,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_9_3,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_9_9,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_9_7,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_7_5,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_7_3,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_7_1,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_7_7,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_8_0,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_8_2,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_8_8,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_8_4,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_8_6,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_0_0,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_5_5,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_5_1,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_5_3,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_1_1,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_2_2,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_InterestingDNAImage_2_0,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_9_1,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_9_7,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_9_3,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_9_5,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_9_9,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_7_1,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_7_7,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_7_5,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_7_3,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_4_2,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_4_4,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_4_0,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_6_6,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_6_2,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_6_4,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_6_0,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_5_3,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_5_5,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_5_1,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_0_0,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_8_4,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_8_8,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_8_0,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_8_6,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_8_2,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_3_3,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_3_1,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_2_2,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_2_0,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_DNAImage_1_1,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_0_0,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_7_5,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_7_3,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_7_1,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_7_7,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_4_2,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_4_4,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_4_0,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_8_2,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_8_8,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_8_0,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_8_6,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_8_4,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_6_0,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_6_4,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_6_2,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_6_6,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_2_2,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_2_0,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_9_9,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_9_5,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_9_1,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_9_7,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_9_3,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_3_3,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_3_1,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_5_3,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_5_5,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_5_1,NegativeTreatedBacteria|RadialDistribution_ZernikePhase_EnhancedDNAImage_1_1,NegativeTreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_Overflow,NegativeTreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_6of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_1of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_5of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_3of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_2of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_EnhancedDNAImage_4of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_DNAImage_2of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_DNAImage_Overflow,NegativeTreatedBacteria|RadialDistribution_MeanFrac_DNAImage_5of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_DNAImage_1of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_DNAImage_4of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_DNAImage_6of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_DNAImage_3of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_4of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_Overflow,NegativeTreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_5of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_2of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_3of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_6of6,NegativeTreatedBacteria|RadialDistribution_MeanFrac_InterestingDNAImage_1of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_DNAImage_3of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_DNAImage_4of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_DNAImage_1of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_DNAImage_2of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_DNAImage_5of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_DNAImage_Overflow,NegativeTreatedBacteria|RadialDistribution_FracAtD_DNAImage_6of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_1of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_5of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_2of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_4of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_Overflow,NegativeTreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_6of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_EnhancedDNAImage_3of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_1of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_4of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_Overflow,NegativeTreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_2of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_3of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_6of6,NegativeTreatedBacteria|RadialDistribution_FracAtD_InterestingDNAImage_5of6,NegativeTreatedBacteria|Intensity_MinIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Intensity_MinIntensity_InterestingDNAImage,NegativeTreatedBacteria|Intensity_IntegratedIntensity_InterestingDNAImage,NegativeTreatedBacteria|Intensity_IntegratedIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Intensity_StdIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Intensity_StdIntensity_InterestingDNAImage,NegativeTreatedBacteria|Intensity_MassDisplacement_EnhancedDNAImage,NegativeTreatedBacteria|Intensity_MassDisplacement_InterestingDNAImage,NegativeTreatedBacteria|Intensity_MaxIntensity_InterestingDNAImage,NegativeTreatedBacteria|Intensity_MaxIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Intensity_IntegratedIntensityEdge_InterestingDNAImage,NegativeTreatedBacteria|Intensity_IntegratedIntensityEdge_EnhancedDNAImage,NegativeTreatedBacteria|Intensity_MinIntensityEdge_InterestingDNAImage,NegativeTreatedBacteria|Intensity_MinIntensityEdge_EnhancedDNAImage,NegativeTreatedBacteria|Intensity_UpperQuartileIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Intensity_UpperQuartileIntensity_InterestingDNAImage,NegativeTreatedBacteria|Intensity_MeanIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Intensity_MeanIntensity_InterestingDNAImage,NegativeTreatedBacteria|Intensity_MeanIntensityEdge_InterestingDNAImage,NegativeTreatedBacteria|Intensity_MeanIntensityEdge_EnhancedDNAImage,NegativeTreatedBacteria|Intensity_MedianIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Intensity_MedianIntensity_InterestingDNAImage,NegativeTreatedBacteria|Intensity_StdIntensityEdge_EnhancedDNAImage,NegativeTreatedBacteria|Intensity_StdIntensityEdge_InterestingDNAImage,NegativeTreatedBacteria|Intensity_LowerQuartileIntensity_InterestingDNAImage,NegativeTreatedBacteria|Intensity_LowerQuartileIntensity_EnhancedDNAImage,NegativeTreatedBacteria|Intensity_MaxIntensityEdge_InterestingDNAImage,NegativeTreatedBacteria|Intensity_MaxIntensityEdge_EnhancedDNAImage,NegativeTreatedBacteria|Intensity_MADIntensity_InterestingDNAImage,NegativeTreatedBacteria|Intensity_MADIntensity_EnhancedDNAImage,NegativeTreatedBacteria|AreaShape_Zernike_6_0,NegativeTreatedBacteria|AreaShape_Zernike_6_6,NegativeTreatedBacteria|AreaShape_Zernike_6_2,NegativeTreatedBacteria|AreaShape_Zernike_6_4,NegativeTreatedBacteria|AreaShape_Zernike_0_0,NegativeTreatedBacteria|AreaShape_Zernike_5_3,NegativeTreatedBacteria|AreaShape_Zernike_5_5,NegativeTreatedBacteria|AreaShape_Zernike_5_1,NegativeTreatedBacteria|AreaShape_Zernike_7_7,NegativeTreatedBacteria|AreaShape_Zernike_7_5,NegativeTreatedBacteria|AreaShape_Zernike_7_1,NegativeTreatedBacteria|AreaShape_Zernike_7_3,NegativeTreatedBacteria|AreaShape_Zernike_9_3,NegativeTreatedBacteria|AreaShape_Zernike_9_5,NegativeTreatedBacteria|AreaShape_Zernike_9_7,NegativeTreatedBacteria|AreaShape_Zernike_9_1,NegativeTreatedBacteria|AreaShape_Zernike_9_9,NegativeTreatedBacteria|AreaShape_Zernike_3_3,NegativeTreatedBacteria|AreaShape_Zernike_3_1,NegativeTreatedBacteria|AreaShape_Zernike_2_2,NegativeTreatedBacteria|AreaShape_Zernike_2_0,NegativeTreatedBacteria|AreaShape_Zernike_8_4,NegativeTreatedBacteria|AreaShape_Zernike_8_6,NegativeTreatedBacteria|AreaShape_Zernike_8_0,NegativeTreatedBacteria|AreaShape_Zernike_8_2,NegativeTreatedBacteria|AreaShape_Zernike_8_8,NegativeTreatedBacteria|AreaShape_Zernike_4_4,NegativeTreatedBacteria|AreaShape_Zernike_4_0,NegativeTreatedBacteria|AreaShape_Zernike_4_2,NegativeTreatedBacteria|AreaShape_Zernike_1_1,NegativeTreatedBacteria|AreaShape_Area,NegativeTreatedBacteria|AreaShape_EquivalentDiameter,NegativeTreatedBacteria|AreaShape_Extent,NegativeTreatedBacteria|AreaShape_BoundingBoxMaximum_Y,NegativeTreatedBacteria|AreaShape_BoundingBoxMaximum_X,NegativeTreatedBacteria|AreaShape_MeanRadius,NegativeTreatedBacteria|AreaShape_MajorAxisLength,NegativeTreatedBacteria|AreaShape_Center_Y,NegativeTreatedBacteria|AreaShape_Center_X,NegativeTreatedBacteria|AreaShape_Perimeter,NegativeTreatedBacteria|AreaShape_MedianRadius,NegativeTreatedBacteria|AreaShape_Eccentricity,NegativeTreatedBacteria|AreaShape_EulerNumber,NegativeTreatedBacteria|AreaShape_BoundingBoxMinimum_X,NegativeTreatedBacteria|AreaShape_BoundingBoxMinimum_Y,NegativeTreatedBacteria|AreaShape_BoundingBoxArea,NegativeTreatedBacteria|AreaShape_MinorAxisLength,NegativeTreatedBacteria|AreaShape_MinFeretDiameter,NegativeTreatedBacteria|AreaShape_Compactness,NegativeTreatedBacteria|AreaShape_MaximumRadius,NegativeTreatedBacteria|AreaShape_Orientation,NegativeTreatedBacteria|AreaShape_Solidity,NegativeTreatedBacteria|AreaShape_FormFactor,NegativeTreatedBacteria|AreaShape_MaxFeretDiameter,NegativeTreatedBacteria|Location_CenterMassIntensity_Y_InterestingDNAImage,NegativeTreatedBacteria|Location_CenterMassIntensity_Y_EnhancedDNAImage,NegativeTreatedBacteria|Location_CenterMassIntensity_X_InterestingDNAImage,NegativeTreatedBacteria|Location_CenterMassIntensity_X_EnhancedDNAImage,NegativeTreatedBacteria|Location_CenterMassIntensity_Z_InterestingDNAImage,NegativeTreatedBacteria|Location_CenterMassIntensity_Z_EnhancedDNAImage,NegativeTreatedBacteria|Location_Center_Y,NegativeTreatedBacteria|Location_Center_Z,NegativeTreatedBacteria|Location_Center_X,NegativeTreatedBacteria|Location_MaxIntensity_Z_EnhancedDNAImage,NegativeTreatedBacteria|Location_MaxIntensity_Z_InterestingDNAImage,NegativeTreatedBacteria|Location_MaxIntensity_Y_InterestingDNAImage,NegativeTreatedBacteria|Location_MaxIntensity_Y_EnhancedDNAImage,NegativeTreatedBacteria|Location_MaxIntensity_X_EnhancedDNAImage,NegativeTreatedBacteria|Location_MaxIntensity_X_InterestingDNAImage,NegativeTreatedBacteria|Children_NegativeTreatedDNA_Count,NegativeTreatedBacteria|Number_Object_Number,NegativeTreatedBacteria|Parent_InterestingBacteriaObjects,InterestingDNAObjects|AreaShape_Zernike_3_3,InterestingDNAObjects|AreaShape_Zernike_3_1,InterestingDNAObjects|AreaShape_Zernike_9_7,InterestingDNAObjects|AreaShape_Zernike_9_5,InterestingDNAObjects|AreaShape_Zernike_9_3,InterestingDNAObjects|AreaShape_Zernike_9_9,InterestingDNAObjects|AreaShape_Zernike_9_1,InterestingDNAObjects|AreaShape_Zernike_8_8,InterestingDNAObjects|AreaShape_Zernike_8_0,InterestingDNAObjects|AreaShape_Zernike_8_6,InterestingDNAObjects|AreaShape_Zernike_8_4,InterestingDNAObjects|AreaShape_Zernike_8_2,InterestingDNAObjects|AreaShape_Zernike_2_2,InterestingDNAObjects|AreaShape_Zernike_2_0,InterestingDNAObjects|AreaShape_Zernike_6_6,InterestingDNAObjects|AreaShape_Zernike_6_0,InterestingDNAObjects|AreaShape_Zernike_6_4,InterestingDNAObjects|AreaShape_Zernike_6_2,InterestingDNAObjects|AreaShape_Zernike_5_1,InterestingDNAObjects|AreaShape_Zernike_5_5,InterestingDNAObjects|AreaShape_Zernike_5_3,InterestingDNAObjects|AreaShape_Zernike_7_5,InterestingDNAObjects|AreaShape_Zernike_7_3,InterestingDNAObjects|AreaShape_Zernike_7_7,InterestingDNAObjects|AreaShape_Zernike_7_1,InterestingDNAObjects|AreaShape_Zernike_0_0,InterestingDNAObjects|AreaShape_Zernike_4_0,InterestingDNAObjects|AreaShape_Zernike_4_2,InterestingDNAObjects|AreaShape_Zernike_4_4,InterestingDNAObjects|AreaShape_Zernike_1_1,InterestingDNAObjects|AreaShape_BoundingBoxMaximum_Y,InterestingDNAObjects|AreaShape_BoundingBoxMaximum_X,InterestingDNAObjects|AreaShape_BoundingBoxMinimum_X,InterestingDNAObjects|AreaShape_BoundingBoxMinimum_Y,InterestingDNAObjects|AreaShape_EulerNumber,InterestingDNAObjects|AreaShape_Center_Y,InterestingDNAObjects|AreaShape_Center_X,InterestingDNAObjects|AreaShape_MeanRadius,InterestingDNAObjects|AreaShape_MinFeretDiameter,InterestingDNAObjects|AreaShape_Extent,InterestingDNAObjects|AreaShape_Area,InterestingDNAObjects|AreaShape_MaximumRadius,InterestingDNAObjects|AreaShape_MaxFeretDiameter,InterestingDNAObjects|AreaShape_MinorAxisLength,InterestingDNAObjects|AreaShape_Perimeter,InterestingDNAObjects|AreaShape_EquivalentDiameter,InterestingDNAObjects|AreaShape_Compactness,InterestingDNAObjects|AreaShape_MedianRadius,InterestingDNAObjects|AreaShape_BoundingBoxArea,InterestingDNAObjects|AreaShape_Eccentricity,InterestingDNAObjects|AreaShape_Orientation,InterestingDNAObjects|AreaShape_MajorAxisLength,InterestingDNAObjects|AreaShape_FormFactor,InterestingDNAObjects|AreaShape_Solidity,InterestingDNAObjects|Children_PositiveTreatedDNA_Count,InterestingDNAObjects|Children_NegativeTreatedDNA_Count,InterestingDNAObjects|Children_NontreatedDNA_Count,InterestingDNAObjects|Parent_MaskedDNAObjects,InterestingDNAObjects|Parent_InterestingBacteriaObjects,InterestingDNAObjects|Location_Center_X,InterestingDNAObjects|Location_Center_Y,InterestingDNAObjects|Number_Object_Number
+    Representation of Nan/Inf:NaN
+    Add a prefix to file names?:No
+    Filename prefix:HPCTestRun1_
+    Overwrite existing files without warning?:No
+    Data to export:PositiveTreatedBacteria
+    Combine these object measurements with those of the previous object?:No
+    File name:\g<Plate>_\g<Well>_ObjectMeasurement.csv
+    Use the object name for the file name?:No
+    Data to export:PositiveTreatedDNA
+    Combine these object measurements with those of the previous object?:Yes
+    File name:DATA.csv
+    Use the object name for the file name?:Yes
+    Data to export:NontreatedBacteria
+    Combine these object measurements with those of the previous object?:Yes
+    File name:DATA.csv
+    Use the object name for the file name?:Yes
+    Data to export:NontreatedDNA
+    Combine these object measurements with those of the previous object?:Yes
+    File name:DATA.csv
+    Use the object name for the file name?:Yes
+    Data to export:NegativeTreatedBacteria
+    Combine these object measurements with those of the previous object?:Yes
+    File name:DATA.csv
+    Use the object name for the file name?:Yes
+    Data to export:NegativeTreatedDNA
+    Combine these object measurements with those of the previous object?:Yes
+    File name:DATA.csv
+    Use the object name for the file name?:Yes
+    Data to export:Image
+    Combine these object measurements with those of the previous object?:No
+    File name:\g<Plate>_\g<Well>_Image_Metadata.csv
+    Use the object name for the file name?:No
+    Data to export:InterestingBacteriaObjects
+    Combine these object measurements with those of the previous object?:No
+    File name:\g<Plate>_\g<Well>_InterestingObjectsMeasurements.csv
+    Use the object name for the file name?:No
+    Data to export:InterestingDNAObjects
+    Combine these object measurements with those of the previous object?:Yes
+    File name:DATA.csv
+    Use the object name for the file name?:Yes
+
+CreateBatchFiles:[module_num:39|svn_version:'Unknown'|variable_revision_number:8|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Store batch files in default output folder?:Yes
+    Output folder path:C:\Users\Lenovo-
+    Are the cluster computers running Windows?:No
+    Hidden- in batch mode:No
+    Hidden- in distributed mode:No
+    Hidden- default input folder at time of save:/
+    Hidden- revision number:0
+    Hidden- from old matlab:No
+    Local root path:D:\HitVerification
+    Cluster root path:./
+    Local root path:D:\HitVerification\input-images
+    Cluster root path:./input-images
+    Local root path:D:\HitVerification\output-data
+    Cluster root path:./output-data
+    Local root path:///D:/HitVerification/input-images
+    Cluster root path:./input-images

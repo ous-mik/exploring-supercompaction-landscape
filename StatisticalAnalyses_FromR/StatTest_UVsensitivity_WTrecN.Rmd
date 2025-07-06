@@ -1,0 +1,114 @@
+---
+title: "UV sensitivity difference between WT and ΔrecN strain (Fig. 11C)"
+author: "Krister Vikedal"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load necessary libraries
+library(tidyverse)
+library(lme4)
+library(lmerTest)
+library(knitr)
+library(broom.mixed)
+```
+
+# Introduction
+
+Here, we assess the UV sensitivities of wild type (BW25113) and *ΔrecN* *E. coli* strains by comparing their dose-dependent relative survival across doses ranging from 10 to 70 J/m^2^ at intervals of 10 J/m^2^. The purpose of this analysis is to determine whether there is a statistical difference between the sensitivities of the wild type and *ΔrecN* strain. Key results from this statistical test are presented in Supplementary Table S9 of the article titled "Exploring the genetic landscape of ciprofloxacin-induced DNA supercompaction in *Escherichia coli*".
+
+# Data summary
+
+```{r load-data}
+# Load data
+dataUVsurvival <- read.table("./Table_Strain_Replicate_UVdose_RelativeSurvival_DoseDependentUVSurvivalAssay.txt", header=TRUE)
+
+# Ensure correct formats
+dataUVsurvival <- dataUVsurvival %>%
+  mutate(
+    Strain = factor(Strain),
+    Replicate = factor(Replicate),
+    UVdose = as.integer(UVdose),
+    logRelativeSurvival = log10(RelativeSurvival)
+  )
+
+# Exclude the unchallenged time point from analyses, due to the normalization
+dataUVsurvival_filtered <- filter(dataUVsurvival, UVdose != 0)
+
+# Summarize data
+dataUVsurvival %>%
+  group_by(Strain, UVdose) %>%
+  summarize(
+    n = n(),
+    mean = mean(RelativeSurvival),
+    SD = sd(RelativeSurvival),
+    .groups = "drop"
+  ) %>%
+  kable(digits = 2, caption = "Mean relative survival (%) with SD for each Strain-UVdose combination.")
+
+# Plot log-transformed survival
+ggplot(dataUVsurvival, aes(x=UVdose, y=logRelativeSurvival, group=Replicate, color=Strain)) +
+  geom_point(size=2, alpha=0.8) +
+  geom_line() +
+  scale_y_continuous(name = expression(Log[10]~"(Relative survival [%])")) +
+  scale_x_continuous(name = expression("UV dose ["*J/m^2*"]")) +
+  theme_minimal(base_size = 12)
+```
+
+# Statistical Analysis
+
+To analyze whether there is a statistical difference between the UV sensitivities of wild type and *ΔrecN*, we fitted a linear mixed-effects model to log~10~(RelativeSurvival) as a function of UV dose (continuous) and bacterial strain (categorical), with biological replicates as random effect variables to account for the repeated measurements in the different biological replicates. We compared main effects and interaction models.
+
+```{r model-comparison}
+model_mainEffects <- lmer(logRelativeSurvival ~ UVdose+Strain + (1 | Strain:Replicate), data=dataUVsurvival_filtered, REML = TRUE)
+model_interaction <- lmer(logRelativeSurvival ~ UVdose*Strain + (1 | Strain:Replicate), data=dataUVsurvival_filtered, REML = TRUE)
+
+# Compare AIC/BIC/logLik
+model_comparison <- tibble(
+  Model = c("Main effects", "Interaction"),
+  AIC = AIC(model_mainEffects, model_interaction)[, "AIC"],
+  BIC = BIC(model_mainEffects, model_interaction)[, "BIC"],
+  logLik = c(logLik(model_mainEffects)[1], logLik(model_interaction)[1])
+  )
+
+kable(model_comparison, digits = c(NA, 1, 1, 2), caption = "Comparison of fitted main effects and interaction models")
+```
+
+Since both information-criterion metrics (AIC, BIC) and the log-likelihood favor the main effects model over the interaction model, we proceeded with the main effects model for the statistical analysis.
+
+```{r statistical-analysis}
+# Collect results for fixed effects from main effects model
+results_table <- tidy(model_mainEffects,
+                      effects = "fixed",
+                      conf.int = TRUE,
+                      conf.level = 0.95) %>%
+  mutate(
+    # Format p-values to use "<0.0001" for very small values
+    p.value = ifelse(p.value < 1e-4,
+                     "<0.0001",
+                     round(p.value, 4)),
+    
+    # Format CI as single string
+    CI = paste0("[", round(conf.low,3), ",", round(conf.high, 3), "]"),
+    
+    # Round estimate to 3 decimals
+    round_estimate = round(estimate,3)
+  ) %>%
+  select(
+    `Fixed effect` = term,
+    Estimate = round_estimate,
+    `95% CI` = CI,
+    `P value` = p.value
+  )
+
+kable(results_table, caption = "Estimates for fixed effects from the main effects model with 95% CIs and P values. All estimates are log10-transforms of relative survival.")
+```
+
+# Conclusion
+
+While the *ΔrecN* strain exhibited lower survival than the wild type across various UV doses, the difference was not statistically significant (*P*=0.0603).

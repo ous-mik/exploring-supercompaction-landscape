@@ -1,0 +1,179 @@
+---
+title: "CIP sensitivity difference between hit strains and WT (Fig. 9A and B)"
+author: "Krister Vikedal"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load necessary libraries
+library(tidyverse)
+library(lme4)
+library(lmerTest)
+library(knitr)
+library(broom.mixed)
+```
+
+# Introduction
+
+Here, we assess the CIP sensitivities of various hit strains (Fig. 9A and B) against the wild type (*E. coli* BW25113) by comparing their exposure time-dependent survival across exposure times ranging from 1 to 60 minutes. The purpose of this analysis is to determine whether any of the hit strains have CIP sensitivities that are statistically different from the wild type. Key results from this statistical test are presented in Supplementary Table S7 and S8 of the article titled "Exploring the genetic landscape of ciprofloxacin-induced DNA supercompaction in *Escherichia coli*".
+
+# Data description
+
+```{r load-data}
+# Load data
+dataCIPsurvival_recHits <- read.table("./Table_Strain_Replicate_ExposureTime_RelativeSurvival_RecHits.txt", header=TRUE)
+dataCIPsurvival_novelHits <- read.table("./Table_Strain_Replicate_ExposureTime_RelativeSurvival_OtherHits.txt", header=TRUE)
+
+# Ensure correct formats
+dataCIPsurvival_recHits <- dataCIPsurvival_recHits %>%
+  mutate(
+    Strain = factor(Strain),
+    Replicate = factor(Replicate),
+    ExposureTime = as.integer(ExposureTime),
+    logRelativeSurvival = log10(RelativeSurvival)
+  )
+dataCIPsurvival_recHits$Strain <- relevel(dataCIPsurvival_recHits$Strain, ref = "BW25113")
+
+dataCIPsurvival_novelHits <- dataCIPsurvival_novelHits %>%
+  mutate(
+    Strain = factor(Strain),
+    Replicate = factor(Replicate),
+    ExposureTime = as.integer(ExposureTime),
+    logRelativeSurvival = log10(RelativeSurvival)
+  )
+dataCIPsurvival_novelHits$Strain <- relevel(dataCIPsurvival_novelHits$Strain, ref = "BW25113")
+
+
+# Exclude the unchallenged samples from analyses, due to the normalization
+dataCIPsurvival_recHits_filtered <- filter(dataCIPsurvival_recHits, ExposureTime != 0)
+dataCIPsurvival_novelHits_filtered <- filter(dataCIPsurvival_novelHits, ExposureTime != 0)
+
+# Summarize data
+dataCIPsurvival_recHits %>%
+  group_by(Strain, ExposureTime) %>%
+  summarize(
+    n = n(),
+    mean = mean(RelativeSurvival),
+    SD = sd(RelativeSurvival),
+    .groups = "drop"
+  ) %>%
+  kable(digits = 2, caption = "(Fig. 9A, rec genes: Mean relative survival (%) with SD for each Strain-ExposureTime combination.")
+
+dataCIPsurvival_novelHits %>%
+  group_by(Strain, ExposureTime) %>%
+  summarize(
+    n = n(),
+    mean = mean(RelativeSurvival),
+    SD = sd(RelativeSurvival),
+    .groups = "drop"
+  ) %>%
+  kable(digits = 2, caption = "(Fig. 9B, novel genes: Mean relative survival (%) with SD for each Strain-ExposureTime combination.")
+
+# Plot log-transformed survival
+ggplot(dataCIPsurvival_recHits, aes(x=ExposureTime, y=logRelativeSurvival, group=Replicate, color=Strain)) +
+  geom_point(size=2, alpha=0.8) +
+  geom_line() +
+  scale_y_continuous(name = expression(Log[10]~"(Relative survival [%])")) +
+  scale_x_continuous(name = expression("Exposure time [min]")) +
+  theme_minimal(base_size = 12)
+
+ggplot(dataCIPsurvival_novelHits, aes(x=ExposureTime, y=logRelativeSurvival, group=Replicate, color=Strain)) +
+  geom_point(size=2, alpha=0.8) +
+  geom_line() +
+  scale_y_continuous(name = expression(Log[10]~"(Relative survival [%])")) +
+  scale_x_continuous(name = expression("Exposure time [min]")) +
+  theme_minimal(base_size = 12)
+```
+
+# Statistical Analysis
+
+To analyze whether there is a statistical difference between the CIP sensitivities of hit strains and the wild type, we fitted, for each set of hits (rec and novel), a linear mixed-effects model to log~10~(RelativeSurvival) as a function of UV dose (continuous) and bacterial strain (categorical), with biological replicates as random effect variables to account for the repeated measurements in the different biological replicates. We compared main effects and interaction models.
+
+```{r model-comparisons}
+model_rec_mainEffects <- lmer(logRelativeSurvival ~ ExposureTime+Strain + (1 | Strain:Replicate), data=dataCIPsurvival_recHits_filtered, REML = TRUE)
+model_rec_interaction <- lmer(logRelativeSurvival ~ ExposureTime*Strain + (1 | Strain:Replicate), data=dataCIPsurvival_recHits_filtered, REML = TRUE)
+
+model_novel_mainEffects <- lmer(logRelativeSurvival ~ ExposureTime+Strain + (1 | Strain:Replicate), data=dataCIPsurvival_novelHits_filtered, REML = TRUE)
+model_novel_interaction <- lmer(logRelativeSurvival ~ ExposureTime*Strain + (1 | Strain:Replicate), data=dataCIPsurvival_novelHits_filtered, REML = TRUE)
+
+# Compare AIC/BIC/logLik
+model_rec_comparison <- tibble(
+  Model = c("Main effects", "Interaction"),
+  AIC = AIC(model_rec_mainEffects, model_rec_interaction)[, "AIC"],
+  BIC = BIC(model_rec_mainEffects, model_rec_interaction)[, "BIC"],
+  logLik = c(logLik(model_rec_mainEffects)[1], logLik(model_rec_interaction)[1])
+  )
+kable(model_rec_comparison, digits = c(NA, 1, 1, 2), caption = "Fig. 9A, rec genes: Comparison of fitted main effects and interaction models")
+
+model_novel_comparison <- tibble(
+  Model = c("Main effects", "Interaction"),
+  AIC = AIC(model_novel_mainEffects, model_novel_interaction)[, "AIC"],
+  BIC = BIC(model_novel_mainEffects, model_novel_interaction)[, "BIC"],
+  logLik = c(logLik(model_novel_mainEffects)[1], logLik(model_novel_interaction)[1])
+  )
+kable(model_novel_comparison, digits = c(NA, 1, 1, 2), caption = "Fig. 9B, novel genes: Comparison of fitted main effects and interaction models")
+```
+
+For the novel hit strains (Fig. 9B) the main effects model is clearly favored over the interaction model according to both information-criterion metrics (AIC, BIC) and log-likelihood. Although model comparison metrics suggested a better fit of the interaction model for the rec hit strains (Fig. 9A), to maintain consistency across both datasets, which share the same genetic background and experimental procedures, we chose to use the main effects model for analyzing this dataset as well. This model provides a good balance between goodness-of-fit and simplicity.
+
+```{r statistical-analyses}
+# Collect results for fixed effects from main effects model
+results_rec_table <- tidy(model_rec_mainEffects,
+                      effects = "fixed",
+                      conf.int = TRUE,
+                      conf.level = 0.95) %>%
+  mutate(
+    # Format p-values to use "<0.0001" for very small values
+    p.value = ifelse(p.value < 1e-4,
+                     "<0.0001",
+                     round(p.value, 4)),
+    
+    # Format CI as single string
+    CI = paste0("[", round(conf.low,3), ",", round(conf.high, 3), "]"),
+    
+    # Round estimate to 3 decimals
+    round_estimate = round(estimate,3)
+  ) %>%
+  select(
+    `Fixed effect` = term,
+    Estimate = round_estimate,
+    `95% CI` = CI,
+    `P value` = p.value
+  )
+
+kable(results_rec_table, caption = "Fig. 9A, rec genes: Estimates for fixed effects from the main effects model with 95% CIs and P values. All estimates are log10-transforms of relative survival.")
+
+results_novel_table <- tidy(model_novel_mainEffects,
+                      effects = "fixed",
+                      conf.int = TRUE,
+                      conf.level = 0.95) %>%
+  mutate(
+    # Format p-values to use "<0.0001" for very small values
+    p.value = ifelse(p.value < 1e-4,
+                     "<0.0001",
+                     round(p.value, 4)),
+    
+    # Format CI as single string
+    CI = paste0("[", round(conf.low,3), ",", round(conf.high, 3), "]"),
+    
+    # Round estimate to 3 decimals
+    round_estimate = round(estimate,3)
+  ) %>%
+  select(
+    `Fixed effect` = term,
+    Estimate = round_estimate,
+    `95% CI` = CI,
+    `P value` = p.value
+  )
+
+kable(results_novel_table, caption = "Fig. 9B, novel genes: Estimates for fixed effects from the main effects model with 95% CIs and P values. All estimates are log10-transforms of relative survival.")
+```
+
+# Conclusion
+
+All rec hit strains, except the *ΔrecR* strain (*P*=0.3252), showed significantly different sensitivities to CIP exposure compared to the wild type (*P*<0.0001). Specifically, the *ΔrecB* and *ΔrecC* strains exhibited higher sensitivities (lower survival), while the *ΔrecD* and *ΔrecF* strains exhibited lower sensitivities (higher survival). None of the novel hit strains displayed significant differences in CIP sensitivity from the wild type, though *ΔclpS*, *ΔdusB*, and *ΔyaiW* appeared slightly more sensitive to CIP exposure than the wild type (*P* values 0.07-0.12).

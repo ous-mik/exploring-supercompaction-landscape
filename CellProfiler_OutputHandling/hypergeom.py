@@ -2,6 +2,10 @@ from scipy.special import gamma, gammaln
 from numpy import *
 import pdb
 
+# This file is copied from the source code of CellProfiler Analyst
+# Copyright (c) Broad Institute
+# Licensed under the BSD 3-Clause License. 
+
 def pochdivpochgen(a, b):
     'generates 100 terms at a time of pochhammer(a)/pochhammer(b)'
     count = 0

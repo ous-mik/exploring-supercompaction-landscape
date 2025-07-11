@@ -5,7 +5,9 @@ import pdb
 from hypergeom import hyper3F2Z1, hyper3F2aZ1
 # import polyafit
 
-
+# This file is copied from the source code of CellProfiler Analyst
+# Copyright (c) Broad Institute
+# Licensed under the BSD 3-Clause License. 
 
 def beta_enriched(prior, posterior):
     # def f(x):

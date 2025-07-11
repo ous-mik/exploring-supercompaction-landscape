@@ -6,6 +6,10 @@ import dirichletintegrate
 import polyafit
 from scipy import stats
 
+# Enrichment score calculations in this script is based on the code from CellProfiler Analyst
+# Copyright (c) Broad Institute
+# Licensed under the BSD 3-Clause License. 
+
 """GO TO THE LAST LINES OF THIS DOCUMENT TO ADD INFORMATION FOR SCRIPT"""
 
 def getListOfFiles(directorypath, indexList):

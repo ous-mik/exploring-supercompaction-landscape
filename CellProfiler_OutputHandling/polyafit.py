@@ -4,10 +4,9 @@ from scipy.special import gammaln, betaln, digamma, polygamma
 from scipy.optimize import fmin
 import sys
 
-"""All of this is copied from CPA python code in file polyafit.py found at: 
-    https://github.com/CellProfiler/CellProfiler-Analyst/
-    blob/a2961f1f24c4bc782b42371a06b4bd7adad5e435/cpa/polyafit.py#L176"""
-
+# This file is copied from the source code of CellProfiler Analyst,
+# Copyright (c) Broad Institute
+# Licensed under the BSD 3-Clause License. 
 
 def dirichlet_moment_match(proportions, weights):
     a = array(average(proportions, axis=0, weights=weights.flat))

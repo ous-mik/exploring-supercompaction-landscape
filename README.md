@@ -10,7 +10,7 @@ bioRxiv (2025). doi: [10.1101/2025.07.xx.xxxxxx](https://doi.org/10.1101/2025.07
 
 Images and data from high-throughput imaging are available in the BioImage Archive under accession number S-BIADXXXX at [https://doi.org/10.6019/S-BIADXXXX](https://doi.org/10.6019/S-BIADXXXX).
 
-Please see the Material and methods section and the Supplementary material of the paper for details on screening procedure and image analysis. 
+Please see the Material and methods section and the Supplementary Material of the paper for details on screening procedure and image analysis. 
 
 ---
 
@@ -104,7 +104,7 @@ All scripts and data used to generate the mixed-effects model results for time- 
 
 This repository is released under the MIT License. See [LICENSE](LICENSE) for details. 
 
-Enrichment scoring methods in the Python scripts are derived from the open-source code of CellProfiler Analyst, which is licensed under the BSD 3-Clause License. This applies to parts of [CombineEntireHitList.py](CellProfiler_OutputHandling/CombineEntireHitList.py) and [DNACompactionAnalysis.py](CellProfiler_OutputHandling/DNACompactionAnalysis.py). Additionally, the scripts [polyafit.py](CellProfiler_OutputHandling/polyafit.py), [dirichletintegrate.py](CellProfiler_OutputHandling/dirichletintegrate.py), and [hypergeom.py](CellProfiler_OutputHandling/hypergeom.py) were copied from the open-source code. The relevant license text is included in [License_BSD3](License_BSD3). 
+Enrichment scoring methods in the Python scripts are derived from the source code of CellProfiler Analyst, which is licensed under the BSD 3-Clause License. This applies to parts of [CombineEntireHitList.py](CellProfiler_OutputHandling/CombineEntireHitList.py) and [DNACompactionAnalysis.py](CellProfiler_OutputHandling/DNACompactionAnalysis.py). Additionally, the scripts [polyafit.py](CellProfiler_OutputHandling/polyafit.py), [dirichletintegrate.py](CellProfiler_OutputHandling/dirichletintegrate.py), and [hypergeom.py](CellProfiler_OutputHandling/hypergeom.py) were copied from the open-source code. The relevant license text is included in [License_BSD3](License_BSD3). 
 
 ## Author
 
@@ -112,6 +112,6 @@ Krister Vikedal
 
 ## Acknowledgements
 
-Enrichment scoring methods in the Python scripts are derived from the open source code of [CellProfiler Analyst](https://github.com/CellProfiler). CellProfiler and CellProfiler Analyst can be downloaded from [cellprofiler.org](https://cellprofiler.org/) and [cellprofileranalyst.org](https://cellprofileranalyst.org/), respectively. 
+Enrichment scoring methods in the Python scripts are derived from the source code of [CellProfiler Analyst](https://github.com/CellProfiler). CellProfiler and CellProfiler Analyst can be downloaded from [cellprofiler.org](https://cellprofiler.org/) and [cellprofileranalyst.org](https://cellprofileranalyst.org/), respectively. 
 
 We thank Jon Kristen Lærdahl (Oslo University Hospital) for assistance with initial CellProfiler pipeline development. Screening image analyses were performed on resources provided by Sigma2 – the National Infrastructure for High-Performance Computing and Data Storage in Norway (projects nn5014k and nn9383k), as well as resources from the high-performance computing infrastructure at the University of Oslo (project ec100). We also acknowledge the use of ChatGPT by OpenAI for code suggestions in some of the scripts included in this repository. 

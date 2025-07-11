@@ -8,7 +8,7 @@ Vikedal K, Berges N, Riisnæs IMM, Ræder SB, Bjørnholt JV, Bjørås M, Skarsta
 **Exploring the genetic landscape of ciprofloxacin-induced DNA supercompaction in <i>Escherichia coli</i>**<br>
 bioRxiv (2025). doi: [10.1101/2025.07.xx.xxxxxx](https://doi.org/10.1101/2025.07.xx.xxxxxx)
 
-Images and data from high-throughput imaging are available in the BioImage Archive under accession number S-BIADXXXX at [https://doi.org/10.6019/S-BIAD2152](https://doi.org/10.6019/S-BIAD2152).
+Images and data from high-throughput imaging are available in the BioImage Archive under accession number S-BIAD2152 at [https://doi.org/10.6019/S-BIAD2152](https://doi.org/10.6019/S-BIAD2152).
 
 Please see the Material and methods section and the Supplementary Material of the paper for details on screening procedure and image analysis. 
 
